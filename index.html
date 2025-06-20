@@ -6,6 +6,7 @@
     <title>cyber pritam craftland maps</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="icon" href="icon.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
         :root {
             --bg-color: #121212;
@@ -304,6 +305,19 @@
             font-size: 16px;
             color: var(--text-color);
         }
+        #buttonon {
+           height: 18px;
+  padding: 10px 20px;
+  background-color: black;
+  color: white;
+  border: 2px solid #4d6180; /* ✅ Proper border */
+  font-size: 10px;
+  cursor: pointer;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* ✅ Flex me yeh use hota hai */
+}
         
         .input-group textarea {
             height: 100px;
@@ -487,6 +501,12 @@
             font-size: 24px;
             margin-bottom: 15px;
         }
+
+        .map-detail-date {
+            color: #aaa;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
         
         .map-detail-codes-container {
             display: flex;
@@ -662,15 +682,32 @@
             justify-content: center;
             align-items: center;
             cursor: pointer;
+            gap: ;
         }
         
         .logout-btn {
             background-color: var(--secondary-color);
             color: white;
             border: none;
+            padding: 8px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .share-profile-btn {
+            background-color: #25D366;
+            color: white;
+            border: none;
             padding: 8px 15px;
             border-radius: 5px;
             cursor: pointer;
+            margin-left: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
         .toast {
@@ -914,7 +951,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 0px;
         }
 
         .whatsapp-share {
@@ -1171,6 +1208,7 @@
                 <span></span>
                 <span></span>
             </div>
+              <button id="buttonon" onclick="openLink('https://github.com/FreeFireoff-arg/Craftlandv1/raw/refs/heads/main/Craftland_1.0.apk')"><b>Download App</b></button>
             <div class="header-profile">
                 <div>CYBER PRITAM</div>
                 <img src="profile.jpg" class="header-profile-pic" alt="Profile">
@@ -1185,35 +1223,37 @@
 
     <div class="sidebar" id="sidebar">
         <div class="close-btn" onclick="toggleSidebar()">×</div>
-        <div class="brand-name">Craftland</div>
-        
+        <div class="brand-name">Craftland
+        </div>
         <div class="profile-section">
             <img src="profile.jpg" class="profile-pic-side" alt="Profile">
             <div class="profile-name">CYBER PRITAM</div>
         </div>
 
         <div class="link-row">
-            <div>YouTube</div>
+            <div>YouTube
+            <i class="fa fa-youtube-play"></i></div>
             <button onclick="openLink('https://youtube.com/@cyber_pritam?si=DtAw8t1EYMN6lhY_')">Subscribe</button>
         </div>
 
         <div class="link-row">
-            <div>Instagram</div>
+            <div>Instagram
+            <i class="fa fa-instagram"></i></div>
             <button onclick="openLink('https://www.instagram.com/cyber_pritam222')">Follow</button>
         </div>
 
         <div class="link-row">
-            <div>Telegram fast</div>
+            <div>Telegram <i class="fa fa-paper-plane"></i></div>
             <button onclick="openLink('https://t.me/C4_CraftX')">Follow</button>
         </div>
-        
         <div class="link-row">
-            <div>Telegram second</div>
-            <button onclick="openLink('https://t.me/cyber_pritam22')">Follow</button>
+            <div>ITEMS CODE <i class="fa fa-cubes"></i></div>
+            <button onclick="openLink('https://0xme.github.io/ItemID2/?mode=2')">JiniX6</button>
         </div>
         
         <div class="link-row">
-            <div>WhatsApp</div>
+            <div>WhatsApp
+            <i class="fa fa-whatsapp"></i></div>
             <button onclick="openLink('https://whatsapp.com/channel/0029Va9FYus7YSd9NcK37s0n')">Follow</button>
         </div>
     </div>
@@ -1343,6 +1383,7 @@
             <img id="detail-thumbnail" class="map-detail-thumbnail" src="" alt="Map Thumbnail">
             <div class="map-detail-body">
                 <h2 id="detail-title" class="map-detail-title"></h2>
+                <div class="map-detail-date" id="detail-date"></div>
                 
                 <div class="map-detail-stats">
                     <div class="map-stat">
@@ -1455,7 +1496,10 @@
                     </div>
                     <span class="profile-name" id="profile-username"></span>
                 </div>
-                <button class="logout-btn" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                <div>
+                    <button class="logout-btn" id="logout-btn"><i class="fas fa-sign-out-alt "></i> Logout</button><br>
+                    <button class="share-profile-btn" id="share-profile-btn"><i class="fas fa-share"></i> Share</button>
+                </div>
             </div>
             
             <div class="database-selector" id="profile-database-selector">
@@ -1610,14 +1654,33 @@
         let currentDatabase = 'primary'; // 'primary', 'assets', or 'backup'
         let currentPage = 'home'; // 'home', 'assets', or 'profile'
         let currentMapDetail = null;
+        let previousState = {
+            scrollPosition: 0,
+            searchTerm: '',
+            page: 'home'
+        };
+        let isDirectMapLink = false; // Flag to track if we came from a direct map link
+        let isDirectProfileLink = false; // Flag to track if we came from a direct profile link
+
+        // Format timestamp to readable date
+        function formatDate(timestamp) {
+            if (!timestamp) return 'Unknown date';
+            const date = new Date(timestamp);
+            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+        }
+        function changeColor() {
+  document.getElementById("buttonon").style.backgroundColor = "green";
+}
 
         // Initialize the app
         function initApp() {
-            // Check URL for map ID parameter
+            // Check URL for map ID or profile parameter
             const urlParams = new URLSearchParams(window.location.search);
             const mapId = urlParams.get('map');
+            const profileId = urlParams.get('profile');
             
             if (mapId) {
+                isDirectMapLink = true;
                 // If there's a map ID in the URL, show that map directly
                 const dbRef = currentDatabase === 'primary' ? primaryDatabase : 
                              currentDatabase === 'assets' ? secondaryDatabase : backupDatabase;
@@ -1633,6 +1696,9 @@
                     .catch(() => {
                         loadHomepage();
                     });
+            } else if (profileId) {
+                isDirectProfileLink = true;
+                viewUserProfile(profileId);
             } else {
                 // Otherwise load the homepage normally
                 const loggedInUser = localStorage.getItem('currentUser');
@@ -1883,17 +1949,6 @@
                 });
         }
 
-        // Update floating button style based on current page
-        function updateFloatingButtonStyle() {
-            if (currentPage === 'assets') {
-                floatingUploadBtn.classList.add('assets-floating-btn');
-                floatingUploadBtn.classList.remove('primary-floating-btn');
-            } else {
-                floatingUploadBtn.classList.add('primary-floating-btn');
-                floatingUploadBtn.classList.remove('assets-floating-btn');
-            }
-        }
-
         // Load homepage with maps
         function loadHomepage() {
             currentPage = 'home';
@@ -1955,7 +2010,13 @@
                             });
                             
                             // Handle card click to show map detail
-                            card.querySelector('.map-card').addEventListener('click', () => {
+                            const cardElement = card.querySelector('.map-card');
+                            cardElement.addEventListener('click', () => {
+                                previousState = {
+                                    scrollPosition: window.scrollY,
+                                    searchTerm: document.getElementById('search-input').value,
+                                    page: currentPage
+                                };
                                 showMapDetail(mapData);
                             });
                             
@@ -2031,7 +2092,13 @@
                                         });
                                         
                                         // Handle card click to show map detail
-                                        card.querySelector('.map-card').addEventListener('click', () => {
+                                        const cardElement = card.querySelector('.map-card');
+                                        cardElement.addEventListener('click', () => {
+                                            previousState = {
+                                                scrollPosition: window.scrollY,
+                                                searchTerm: document.getElementById('search-input').value,
+                                                page: currentPage
+                                            };
                                             showMapDetail(mapData);
                                         });
                                         
@@ -2116,7 +2183,13 @@
                                     });
                                     
                                     // Handle card click to show map detail
-                                    card.querySelector('.map-card').addEventListener('click', () => {
+                                    const cardElement = card.querySelector('.map-card');
+                                    cardElement.addEventListener('click', () => {
+                                        previousState = {
+                                            scrollPosition: window.scrollY,
+                                            searchTerm: document.getElementById('search-input').value,
+                                            page: currentPage
+                                        };
                                         showMapDetail(mapData);
                                     });
                                     
@@ -2211,7 +2284,13 @@
                             });
                             
                             // Handle card click to show map detail
-                            card.querySelector('.map-card').addEventListener('click', () => {
+                            const cardElement = card.querySelector('.map-card');
+                            cardElement.addEventListener('click', () => {
+                                previousState = {
+                                    scrollPosition: window.scrollY,
+                                    searchTerm: document.getElementById('search-input').value,
+                                    page: currentPage
+                                };
                                 showMapDetail(mapData);
                             });
                             
@@ -2277,6 +2356,9 @@
             
             document.getElementById('detail-title').textContent = mapData.title;
             document.getElementById('detail-thumbnail').src = mapData.thumbnail || DEFAULT_THUMBNAIL;
+            
+            // Update date display
+            document.getElementById('detail-date').textContent = `Uploaded: ${mapData.formattedDate || formatDate(mapData.createdAt)}`;
             
             // Update stats (views)
             document.getElementById('detail-views').textContent = mapData.views || 0;
@@ -2403,12 +2485,25 @@
                     }
                 }
             });
+            
+            // Update URL without reloading if not a direct map link
+            if (!isDirectMapLink) {
+                const newUrl = `${BASE_URL}?map=${mapData.id}`;
+                window.history.pushState({ path: newUrl }, '', newUrl);
+            }
         }
 
         // Show share modal
         function showShareModal(mapData) {
             currentMapToShare = mapData;
             const shareLink = `${BASE_URL}?map=${mapData.id}`;
+            shareLinkInput.value = shareLink;
+            shareModal.style.display = 'flex';
+        }
+
+        // Show profile share modal
+        function showProfileShareModal(userId, username) {
+            const shareLink = `${BASE_URL}?profile=${userId}`;
             shareLinkInput.value = shareLink;
             shareModal.style.display = 'flex';
         }
@@ -2446,6 +2541,21 @@
             }
             
             contentArea.innerHTML = '<div class="loading">Loading profile...</div>';
+            
+            // Save previous state if not coming from a direct link
+            if (!isDirectProfileLink) {
+                previousState = {
+                    scrollPosition: window.scrollY,
+                    searchTerm: document.getElementById('search-input').value,
+                    page: currentPage
+                };
+            }
+            
+            // Update URL if not a direct profile link
+            if (!isDirectProfileLink) {
+                const newUrl = `${BASE_URL}?profile=${userId}`;
+                window.history.pushState({ path: newUrl }, '', newUrl);
+            }
             
             primaryDatabase.ref('users/' + userId).once('value')
                 .then(userSnapshot => {
@@ -2490,6 +2600,8 @@
                     }
                     
                     const logoutBtn = profilePage.getElementById('logout-btn');
+                    const shareProfileBtn = profilePage.getElementById('share-profile-btn');
+                    
                     if (userId !== currentUser.uid) {
                         logoutBtn.innerHTML = '<i class="fas fa-arrow-left"></i> Back';
                         logoutBtn.style.backgroundColor = '#4a6bff';
@@ -2500,11 +2612,16 @@
                                 loadHomepage();
                             }
                         });
+                        shareProfileBtn.style.display = 'none';
                     } else {
                         logoutBtn.addEventListener('click', () => {
                             currentUser = null;
                             localStorage.removeItem('currentUser');
                             loadHomepage();
+                        });
+                        shareProfileBtn.style.display = 'flex';
+                        shareProfileBtn.addEventListener('click', () => {
+                            showProfileShareModal(userId, userData.username);
                         });
                     }
                     
@@ -2596,7 +2713,13 @@
                                         });
                                         
                                         // Handle card click to show map detail
-                                        card.querySelector('.map-card').addEventListener('click', () => {
+                                        const cardElement = card.querySelector('.map-card');
+                                        cardElement.addEventListener('click', () => {
+                                            previousState = {
+                                                scrollPosition: window.scrollY,
+                                                searchTerm: document.getElementById('search-input').value,
+                                                page: currentPage
+                                            };
                                             showMapDetail(mapData);
                                         });
                                         
@@ -2692,6 +2815,7 @@
                     uploaderId: currentUser.uid,
                     uploaderName: currentUser.username || 'Anonymous',
                     createdAt: firebase.database.ServerValue.TIMESTAMP,
+                    formattedDate: formatDate(Date.now()),
                     thumbnail: thumbnailUrl,
                     views: 0,
                     tags: ['Free Fire', 'Map', 'Craftland']
@@ -2776,6 +2900,65 @@
                 btn.disabled = false;
                 showToast('Error uploading map: ' + error.message, 3000, isAssets);
             }
+        }
+
+        // Handle back button/popstate events
+        window.addEventListener('popstate', function(event) {
+            // Check if we're coming from a map detail view
+            if (mapDetailModal.style.display === 'block') {
+                mapDetailModal.style.display = 'none';
+                
+                // Only reload if we came from a direct map link
+                if (isDirectMapLink) {
+                    isDirectMapLink = false;
+                    
+                    // Restore previous state
+                    if (previousState.page === 'assets') {
+                        loadAssetsPage();
+                    } else if (previousState.page === 'home') {
+                        loadHomepage();
+                    }
+                    
+                    if (previousState.searchTerm) {
+                        document.getElementById('search-input').value = previousState.searchTerm;
+                        filterMaps(previousState.searchTerm);
+                    }
+                    
+                    window.scrollTo(0, previousState.scrollPosition);
+                }
+            }
+            // Check if we're coming from a direct profile link
+            else if (isDirectProfileLink) {
+                isDirectProfileLink = false;
+                
+                // Restore previous state
+                if (previousState.page === 'assets') {
+                    loadAssetsPage();
+                } else if (previousState.page === 'home') {
+                    loadHomepage();
+                }
+                
+                if (previousState.searchTerm) {
+                    document.getElementById('search-input').value = previousState.searchTerm;
+                    filterMaps(previousState.searchTerm);
+                }
+                
+                window.scrollTo(0, previousState.scrollPosition);
+            }
+        });
+
+        // Filter maps based on search term
+        function filterMaps(searchTerm) {
+            const mapCards = document.querySelectorAll('.map-card');
+            mapCards.forEach(card => {
+                const title = card.querySelector('.map-title').textContent.toLowerCase();
+                const code = card.querySelector('.map-code').textContent.toLowerCase();
+                if (title.includes(searchTerm.toLowerCase()) || code.includes(searchTerm.toLowerCase())) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
         }
 
         // Event listeners when DOM is loaded
@@ -2868,6 +3051,34 @@
                 shareModal.style.display = 'none';
             });
             
+            // Close detail modal
+            closeDetail.addEventListener('click', () => {
+                mapDetailModal.style.display = 'none';
+                
+                // Only update URL if we came from a direct map link
+                if (isDirectMapLink) {
+                    isDirectMapLink = false;
+                    window.history.pushState({ path: BASE_URL }, '', BASE_URL);
+                    
+                    // Restore previous state
+                    if (previousState.page === 'assets') {
+                        loadAssetsPage();
+                    } else if (previousState.page === 'home') {
+                        loadHomepage();
+                    }
+                    
+                    if (previousState.searchTerm) {
+                        document.getElementById('search-input').value = previousState.searchTerm;
+                        filterMaps(previousState.searchTerm);
+                    }
+                    
+                    window.scrollTo(0, previousState.scrollPosition);
+                } else {
+                    // Just close the modal without changing anything else
+                    window.history.back();
+                }
+            });
+            
             // Submit buttons for upload forms
             submitBtn.addEventListener('click', () => {
                 const title = document.getElementById('map-title').value;
@@ -2933,11 +3144,6 @@
             assetsBtn.addEventListener('click', loadAssetsPage);
             profileBtn.addEventListener('click', loadProfilePage);
             
-            // Close detail modal
-            closeDetail.addEventListener('click', () => {
-                mapDetailModal.style.display = 'none';
-            });
-            
             // Close modals when clicking outside
             window.addEventListener('click', (event) => {
                 if (event.target === uploadFormModal) {
@@ -2948,6 +3154,29 @@
                 }
                 if (event.target === mapDetailModal) {
                     mapDetailModal.style.display = 'none';
+                    
+                    // Only update URL if we came from a direct map link
+                    if (isDirectMapLink) {
+                        isDirectMapLink = false;
+                        window.history.pushState({ path: BASE_URL }, '', BASE_URL);
+                        
+                        // Restore previous state
+                        if (previousState.page === 'assets') {
+                            loadAssetsPage();
+                        } else if (previousState.page === 'home') {
+                            loadHomepage();
+                        }
+                        
+                        if (previousState.searchTerm) {
+                            document.getElementById('search-input').value = previousState.searchTerm;
+                            filterMaps(previousState.searchTerm);
+                        }
+                        
+                        window.scrollTo(0, previousState.scrollPosition);
+                    } else {
+                        // Just close the modal without changing anything else
+                        window.history.back();
+                    }
                 }
                 if (event.target === confirmDeleteModal) {
                     confirmDeleteModal.style.display = 'none';
@@ -2964,23 +3193,7 @@
             const searchInput = document.getElementById('search-input');
             searchInput.addEventListener('input', (e) => {
                 const searchTerm = e.target.value.toLowerCase();
-                if (searchTerm.length > 2) {
-                    const mapCards = document.querySelectorAll('.map-card');
-                    mapCards.forEach(card => {
-                        const title = card.querySelector('.map-title').textContent.toLowerCase();
-                        const code = card.querySelector('.map-code').textContent.toLowerCase();
-                        if (title.includes(searchTerm) || code.includes(searchTerm)) {
-                            card.style.display = 'block';
-                        } else {
-                            card.style.display = 'none';
-                        }
-                    });
-                } else if (searchTerm.length === 0) {
-                    const mapCards = document.querySelectorAll('.map-card');
-                    mapCards.forEach(card => {
-                        card.style.display = 'block';
-                    });
-                }
+                filterMaps(searchTerm);
             });
             
             // Delete confirmation buttons
@@ -2999,6 +3212,19 @@
                 addCodeInput(assetsCodeInputsContainer);
             });
         });
+    function isWebView() {
+      const ua = navigator.userAgent || '';
+      // WebView detect logic (Android WebView + iOS UIWebView/WKWebView)
+      return (
+        (ua.includes('wv') || ua.includes('WebView')) || // Android WebView
+        (ua.includes('iPhone') && !ua.includes('Safari')) // iOS WebView
+      );
+    }
+
+    if (!isWebView()) {
+      // Browser detected: show button
+      document.getElementById('buttonon').style.display = 'inline-flex';
+    }
     </script>
 </body>
 </html>

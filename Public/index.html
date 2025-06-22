@@ -1019,6 +1019,12 @@
             flex: 1;
             min-width: 120px;
         }
+        .left-pading {
+    display: block;
+    margin: auto;
+    padding-left: 10px;
+    padding-top: 20px;
+  }
 
         .profile-database-btn.active {
             background-color: var(--primary-color);
@@ -1198,6 +1204,10 @@
         .map-views i {
             font-size: 10px;
         }
+        .phonepe{
+            width: 100vw;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -1224,7 +1234,8 @@
 
     <div class="sidebar" id="sidebar">
         <div class="close-btn" onclick="toggleSidebar()">×</div>
-        <div class="brand-name">Craftland
+        <div class="brand-name">
+             <img src="craftland.png" class="left-padding" width="170px"> 
         </div>
         <div class="profile-section">
             <img src="profile.jpg" class="profile-pic-side" alt="Profile">
@@ -1258,11 +1269,12 @@
             <button onclick="openLink('https://whatsapp.com/channel/0029Va9FYus7YSd9NcK37s0n')">Follow</button>
         </div>
     </div>
-
+    <div class="phonepe">
+       <img src="craftland.png" class="left-padding" width="120px"> 
+       </div>
     <main class="content-area" id="content-area">
         <div class="loading">Loading maps...</div>
     </main>
-
     <nav class="bottom-nav" id="bottom-nav">
         <div class="bottom-nav-container">
             <button id="home-btn"><i class="fas fa-home"></i> Home</button>
@@ -1505,10 +1517,10 @@
             
             <div class="database-selector" id="profile-database-selector">
                 <button class="profile-database-btn" data-db="primary"><i class="fas fa-home"></i> Home Maps</button>
-                <button class="profile-database-btn" data-db="assets"><i class="fas fa-coins"></i> Asset Maps</button>
+                <button class="profile-database-btn" data-db="assets"><i class="fas fa-coins"></i> Asset Store</button>
             </div>
             
-            <h3 style="margin-bottom: 15px;">Your Uploaded Maps</h3>
+            <h3 style="margin-bottom: 15px;">Your Craftland</h3>
             <div id="uploaded-maps-container">
                 <!-- User's uploaded maps will be inserted here -->
             </div>
@@ -2598,6 +2610,7 @@ function viewUserProfile(userId) {
             const logoutBtn = profilePage.getElementById('logout-btn');
             const shareProfileBtn = profilePage.getElementById('share-profile-btn');
             
+            // Modified this part to fix the issue
             if (!currentUser || userId !== currentUser.uid) {
                 logoutBtn.innerHTML = '<i class="fas fa-arrow-left"></i> Back';
                 logoutBtn.style.backgroundColor = '#4a6bff';
@@ -2608,13 +2621,16 @@ function viewUserProfile(userId) {
                         loadHomepage();
                     }
                 });
-                shareProfileBtn.style.display = 'none';
             } else {
+                logoutBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> Logout';
+                logoutBtn.style.backgroundColor = 'var(--secondary-color)';
                 logoutBtn.addEventListener('click', () => {
                     currentUser = null;
                     localStorage.removeItem('currentUser');
                     loadHomepage();
                 });
+                
+                // Only show share button if viewing own profile
                 shareProfileBtn.style.display = 'flex';
                 shareProfileBtn.addEventListener('click', () => {
                     showProfileShareModal(userId, userData.username);

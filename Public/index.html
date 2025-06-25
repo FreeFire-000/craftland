@@ -39,7 +39,7 @@
             padding: 10px;
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-sms: center;
         }
 
         .hamburger {
@@ -92,7 +92,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
+            position: relative;
         }
         
         .profile-pic-side {
@@ -107,12 +108,18 @@
             font-size: 18px;
             font-weight: bold;
         }
+        .link-row img{
+            width: 30px;
+            width: 30px;
+            border-radius: 50px;
+        }
 
         .link-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin: 15px 0;
+            margin: 4px 0;
+            text-align: center;
             font-size: 16px;
             padding: 10px;
             background: #333;
@@ -123,7 +130,7 @@
             background: #4a6bff;
             border: none;
             color: white;
-            padding: 5px 10px;
+            padding: 10px 10px;
             border-radius: 5px;
             cursor: pointer;
         }
@@ -1235,42 +1242,37 @@
     <div class="sidebar" id="sidebar">
         <div class="close-btn" onclick="toggleSidebar()">×</div>
         <div class="brand-name">
-             <img src="craftland.png" class="left-padding" width="170px"> 
+             <img src="https://i.ibb.co/rRfMjtg7/1934bdfbdc11.png" class="left-padding" width="170px"> 
         </div>
         <div class="profile-section">
             <img src="profile.jpg" class="profile-pic-side" alt="Profile">
-            <div class="profile-name">CYBER PRITAM</div>
+            <div class="link-row">
+            <div>CYBER PRITAM >
+            </div>
+            <button onclick="window.location.href='page1.html'">Follow</button>
         </div>
-
-        <div class="link-row">
-            <div>YouTube
-            <i class="fa fa-youtube-play"></i></div>
-            <button onclick="openLink('https://youtube.com/@cyber_pritam?si=DtAw8t1EYMN6lhY_')">Subscribe</button>
-        </div>
-
-        <div class="link-row">
-            <div>Instagram
-            <i class="fa fa-instagram"></i></div>
-            <button onclick="openLink('https://www.instagram.com/cyber_pritam222')">Follow</button>
-        </div>
-
-        <div class="link-row">
-            <div>Telegram <i class="fa fa-paper-plane"></i></div>
-            <button onclick="openLink('https://t.me/C4_CraftX')">Follow</button>
+<div class="link-row">
+    <div>items code >
+    </div>
+    <button onclick="openLink('https://0xme.github.io/ItemID2/?mode=2')">Follow</button>
+</div>
+        <hr style="height: 2px; background-color: white; border: none; width: 100%;">
         </div>
         <div class="link-row">
-            <div>ITEMS CODE <i class="fa fa-cubes"></i></div>
-            <button onclick="openLink('https://0xme.github.io/ItemID2/?mode=2')">JiniX6</button>
+           <img src="https://i.ibb.co/ppSv32m/IMG-20250624-221200-385.jpg" alt="Ravi"> <div>
+                Ravi Editx
+            </div>
+              <button onclick="window.location.href='page2.html'">Follow</button>
         </div>
-        
         <div class="link-row">
-            <div>WhatsApp
-            <i class="fa fa-whatsapp"></i></div>
-            <button onclick="openLink('https://whatsapp.com/channel/0029Va9FYus7YSd9NcK37s0n')">Follow</button>
+           <img src="https://i.ibb.co/Zz0SYsmp/IMG-20250625-110058-658.jpg" alt="YouTube"> <div>
+                LAG FF
+            </div>
+             <button onclick="window.location.href='page3.html'">Follow</button>
         </div>
     </div>
     <div class="phonepe">
-       <img src="craftland.png" class="left-padding" width="120px"> 
+       <img src="https://i.ibb.co/rRfMjtg7/1934bdfbdc11.png" class="left-padding" width="120px"> 
        </div>
     <main class="content-area" id="content-area">
         <div class="loading">Loading maps...</div>

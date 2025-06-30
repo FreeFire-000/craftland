@@ -39,7 +39,7 @@
             padding: 10px;
             display: flex;
             justify-content: space-between;
-            align-sms: center;
+            align-items: center;
         }
 
         .hamburger {
@@ -689,7 +689,6 @@
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            gap: ;
         }
         
         .logout-btn {
@@ -1272,7 +1271,7 @@
         </div>
            <div class="link-row">
            <img src="https://i.ibb.co/nNRgp85y/e2a07050f167.png" alt="YouTube"> <div>
-                SasCo
+                SacSo
             </div>
              <button onclick="window.location.href='page4.html'">Follow</button>
         </div>
@@ -1518,7 +1517,7 @@
                     <span class="profile-name" id="profile-username"></span>
                 </div>
                 <div>
-                    <button class="logout-btn" id="logout-btn"><i class="fas fa-sign-out-alt "></i> Logout</button><br>
+                    <button class="logout-btn" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
                     <button class="share-profile-btn" id="share-profile-btn"><i class="fas fa-share"></i> Share</button>
                 </div>
             </div>
@@ -2525,6 +2524,7 @@ function showShareModal(mapData) {
 
 // Show profile share modal
 function showProfileShareModal(userId, username) {
+    currentMapToShare = { id: userId, title: username + "'s Profile" };
     const shareLink = `${BASE_URL}?profile=${userId}`;
     shareLinkInput.value = shareLink;
     shareModal.style.display = 'flex';
@@ -2539,7 +2539,9 @@ function copyShareLink() {
 
 // Share via WhatsApp
 function shareViaWhatsApp() {
-    const message = `Check out this Free Fire map: ${shareLinkInput.value}`;
+    const message = currentMapToShare.title.includes("Profile") 
+        ? `Check out this Free Fire profile: ${shareLinkInput.value}`
+        : `Check out this Free Fire map: ${shareLinkInput.value}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
 }
 
@@ -2550,7 +2552,9 @@ function shareViaFacebook() {
 
 // Share via Telegram
 function shareViaTelegram() {
-    const message = `Check out this Free Fire map: ${shareLinkInput.value}`;
+    const message = currentMapToShare.title.includes("Profile") 
+        ? `Check out this Free Fire profile: ${shareLinkInput.value}`
+        : `Check out this Free Fire map: ${shareLinkInput.value}`;
     window.open(`https://t.me/share/url?url=${encodeURIComponent(message)}`, '_blank');
 }
 
@@ -2637,13 +2641,13 @@ function viewUserProfile(userId) {
                     localStorage.removeItem('currentUser');
                     loadHomepage();
                 });
-                
-                // Only show share button if viewing own profile
-                shareProfileBtn.style.display = 'flex';
-                shareProfileBtn.addEventListener('click', () => {
-                    showProfileShareModal(userId, userData.username);
-                });
             }
+            
+            // Always show share button for all profiles
+            shareProfileBtn.style.display = 'flex';
+            shareProfileBtn.addEventListener('click', () => {
+                showProfileShareModal(userId, userData.username);
+            });
             
             const uploadedMapsContainer = profilePage.getElementById('uploaded-maps-container');
             const databaseSelector = profilePage.getElementById('profile-database-selector');

@@ -1,9 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2KQ4X0E33T"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-2KQ4X0E33T');
+</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FreeFire-craftland maps</title>
+    <title>FreeFire-craftland-maps</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="icon" href="icon.png" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -1227,7 +1236,7 @@
             </div>
               <button id="buttonon" onclick="openLink('https://github.com/FreeFireoff-arg/Craftlandv1/raw/refs/heads/main/Craftland_1.0.apk')"><b>Download App</b></button>
             <div class="header-profile">
-                <div>CRAFTLAND</div>
+                <div>Craftland Official</div>
                 <img src="https://i.ibb.co/FLzNz8sv/caa0c82aab54.jpg" class="header-profile-pic" alt="Profile">
             </div>
         </div>
@@ -1246,22 +1255,22 @@
         <div class="profile-section">
             <img src="https://i.ibb.co/TxSLMYdV/8d402dc5c8a8.png" class="profile-pic-side" alt="Profile">
             <div class="link-row">
-            <div>CYBER PRITAM &nbsp;&nbsp;
+            <div>CYBER PRITAM >
             </div>
             <button onclick="window.location.href='page1.html'">Follow</button>
         </div>
 <div class="link-row">
-    <div>items code &nbsp;
+    <div>items code >
     </div>
     <button onclick="openLink('https://0xme.github.io/ItemID2/?mode=2')">JiniX6</button>
 </div>
         <hr style="height: 2px; background-color: white; border: none; width: 100%;">
-        </div>  
+        </div>
         <div class="link-row">
            <img src="https://i.ibb.co/Dfn6k8br/d069dd8f71c4.png" alt="YouTube"> <div>
                 RUSHKEY
             </div>
-             <button onclick="window.location.href='page5.html'">Follow</button>
+             <button onclick="window.location.href='page3.html'">Follow</button>
         </div>
         <div class="link-row">
            <img src="https://i.ibb.co/ppSv32m/IMG-20250624-221200-385.jpg" alt="Ravi"> <div>
@@ -1269,7 +1278,6 @@
             </div>
               <button onclick="window.location.href='page2.html'">Follow</button>
         </div>
-       
         <div class="link-row">
            <img src="https://i.ibb.co/Zz0SYsmp/IMG-20250625-110058-658.jpg" alt="YouTube"> <div>
                 LAG FF
@@ -1570,6 +1578,7 @@
 
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sha256/0.9.0/sha256.min.js"></script>
     <script>
 // Primary Firebase Configuration
 const primaryFirebaseConfig = {
@@ -1617,7 +1626,7 @@ const IMGBB_API_KEYS = [
 let currentImgBBKeyIndex = 0;
 
 const DEFAULT_THUMBNAIL = 'https://i.ibb.co/jPTH7Wtk/9b6ab7b2c069.jpg';
-const DEFAULT_PROFILE_PIC = 'https://i.ibb.co/BHRTxtVf/a8311337dc8e.jpg';
+const DEFAULT_PROFILE_PIC = 'https://i.ibb.co/TxSLMYdV/8d402dc5c8a8.png';
 const BASE_URL = window.location.href.split('?')[0];
 
 // DOM elements
@@ -1698,6 +1707,12 @@ function formatDate(timestamp) {
 
 function changeColor() {
     document.getElementById("buttonon").style.backgroundColor = "green";
+}
+
+// Hash password using SHA-256
+async function hashPassword(password) {
+    // Using js-sha256 library for hashing
+    return sha256(password);
 }
 
 // Initialize the app
@@ -1892,89 +1907,103 @@ function updateInputLabel(input) {
 }
 
 // User login function
-function login(username, password) {
-    primaryDatabase.ref('users').orderByChild('username').equalTo(username).once('value')
-        .then(snapshot => {
-            const users = snapshot.val();
-            if (!users) {
-                throw new Error('Username not found');
-            }
-            
-            let userFound = null;
-            for (const userId in users) {
-                if (users[userId].password === password) {
-                    userFound = {
-                        uid: userId,
-                        ...users[userId]
-                    };
-                    break;
+async function login(username, password) {
+    try {
+        // Hash the password before checking
+        const hashedPassword = await hashPassword(password);
+        
+        primaryDatabase.ref('users').orderByChild('username').equalTo(username).once('value')
+            .then(snapshot => {
+                const users = snapshot.val();
+                if (!users) {
+                    throw new Error('Username not found');
                 }
-            }
-            
-            if (!userFound) {
-                throw new Error('Incorrect password');
-            }
-            
-            currentUser = userFound;
-            localStorage.setItem('currentUser', JSON.stringify(currentUser));
-            
-            loginError.textContent = '';
-            showToast('Login successful!');
-            loginModal.style.display = 'none';
-            
-            if (currentPage === 'assets') {
-                assetsUploadFormModal.style.display = 'flex';
-            } else {
-                uploadFormModal.style.display = 'flex';
-            }
-        })
-        .catch(error => {
-            loginError.textContent = error.message;
-        });
+                
+                let userFound = null;
+                for (const userId in users) {
+                    if (users[userId].password === hashedPassword) {
+                        userFound = {
+                            uid: userId,
+                            ...users[userId]
+                        };
+                        break;
+                    }
+                }
+                
+                if (!userFound) {
+                    throw new Error('Incorrect password');
+                }
+                
+                currentUser = userFound;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                
+                loginError.textContent = '';
+                showToast('Login successful!');
+                loginModal.style.display = 'none';
+                
+                if (currentPage === 'assets') {
+                    assetsUploadFormModal.style.display = 'flex';
+                } else {
+                    uploadFormModal.style.display = 'flex';
+                }
+            })
+            .catch(error => {
+                loginError.textContent = error.message;
+            });
+    } catch (error) {
+        loginError.textContent = 'Error during login: ' + error.message;
+    }
 }
 
 // User registration function
-function register(username, password) {
-    primaryDatabase.ref('usernames').once('value')
-        .then(snapshot => {
-            if (snapshot.hasChild(username)) {
-                throw new Error('Username already exists');
-            }
-            
-            const newUserRef = primaryDatabase.ref('users').push();
-            const userId = newUserRef.key;
-            
-            return newUserRef.set({
-                username: username,
-                password: password,
-                profilePic: DEFAULT_PROFILE_PIC,
-                createdAt: firebase.database.ServerValue.TIMESTAMP
-            }).then(() => {
-                return primaryDatabase.ref('usernames/' + username).set(true);
-            }).then(() => {
-                return {
-                    uid: userId,
+async function register(username, password) {
+    try {
+        // Hash the password before storing
+        const hashedPassword = await hashPassword(password);
+        
+        primaryDatabase.ref('usernames').once('value')
+            .then(snapshot => {
+                if (snapshot.hasChild(username)) {
+                    throw new Error('Username already exists');
+                }
+                
+                const newUserRef = primaryDatabase.ref('users').push();
+                const userId = newUserRef.key;
+                
+                return newUserRef.set({
                     username: username,
-                    password: password,
-                    profilePic: DEFAULT_PROFILE_PIC
-                };
+                    password: hashedPassword, // Store the hashed password
+                    profilePic: DEFAULT_PROFILE_PIC,
+                    createdAt: firebase.database.ServerValue.TIMESTAMP
+                }).then(() => {
+                    return primaryDatabase.ref('usernames/' + username).set(true);
+                }).then(() => {
+                    return {
+                        uid: userId,
+                        username: username,
+                        password: hashedPassword, // Store hashed password in local user object
+                        profilePic: DEFAULT_PROFILE_PIC
+                    };
+                });
+            })
+            .then((userData) => {
+                showToast('Registration successful!');
+                currentUser = userData;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                loginModal.style.display = 'none';
+                
+                if (currentPage === 'assets') {
+                    assetsUploadFormModal.style.display = 'flex';
+                } else {
+                    uploadFormModal.style.display = 'flex';
+                }
+            })
+            .catch(error => {
+                registerError.textContent = error.message;
             });
-        })
-        .then((userData) => {
-            showToast('Registration successful!');
-            currentUser = userData;
-            localStorage.setItem('currentUser', JSON.stringify(currentUser));
-            loginModal.style.display = 'none';
-            
-            if (currentPage === 'assets') {
-                assetsUploadFormModal.style.display = 'flex';
-            } else {
-                uploadFormModal.style.display = 'flex';
-            }
-        })
-        .catch(error => {
-            registerError.textContent = error.message;
-        });
+    } catch (error) {
+        registerError.textContent = 'Error during registration: ' + error.message;
+    }
 }
 
 // Load homepage with maps

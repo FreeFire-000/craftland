@@ -1,0 +1,9 @@
+{
+  "apiKey": "AIzaSyDbV11XtCttDOc09dH0qeKn0AxvCDDG5p8",
+  "authDomain": "craftland3-6b6d5.firebaseapp.com",
+  "databaseURL": "https://craftland3-6b6d5-default-rtdb.firebaseio.com",
+  "projectId": "craftland3-6b6d5",
+  "storageBucket": "craftland3-6b6d5.appspot.com",
+  "messagingSenderId": "559001168407",
+  "appId": "1:559001168407:web:e0f3d462012df2f9650a52"
+}

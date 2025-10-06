@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-   <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-2KQ4X0E33T"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2KQ4X0E33T"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
@@ -11,625 +10,652 @@
     </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Videos with Smart Scroll Control</title>
+  <title>RUSHKEYfam - Free Fire Craftland Creator</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-      background:#000;
-      color:#fff;
-      transition: background-color 0.3s;
+    :root {
+      --primary: #1d81bf;
+      --primary-dark: #e03e3e;
+      --secondary: #1e1e1e;
+      --dark: #121212;
+      --light: #f5f5f5;
+      --gray: #888;
+      --card-bg: #1a1a1a;
+      --card-border: #333;
     }
-    h2 { margin-bottom: 15px; }
-
-    /* Search */
-    .search-container { margin-bottom: 20px; }
-    #searchInput {
-      display: none;
-      padding: 8px;
-      width: 100%;
-      border: 1px solid #444;
-      border-radius: 6px;
-      background:#111;
-      color:white;
-    }
-    #searchBtn {
-      padding: 8px 12px;
-      border: 2px solid #2196f3;
-      background: transparent;
-      color: white;
-      border-radius: 30px;
-      cursor: pointer;
-      width: 80px;
-    }
-    #searchBtn:hover { background: steelblue; }
-
-    /* Chips */
-    .chips { margin-top: 10px; }
-    .chip {
-      display: inline-block;
-      padding: 8px 14px;
-      margin: 5px;
-      background: #222;
-      border-radius: 20px;
-      cursor: pointer;
-      transition: 0.3s;
-      color:#fff;
-    }
-    .chip:hover { background:#333; }
-
-    /* Video Cards */
-    .video-card {
-      background: #111;
-      padding: 12px;
-      margin: 20px 0;
-      border-radius: 14px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.7);
-      overflow:hidden;
-      position: relative;
-    }
-    .thumb {
-      width: 100%; 
-      height: 190px; 
-      border-radius: 12px;
-      background-size: cover; 
-      background-position: center;
-      position: relative;
-      cursor:pointer;
-    }
-    .play-btn {
-      position: absolute; 
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      width: 70px; height: 70px;
-      border-radius: 50%;
-      background: rgba(0,0,0,0.7);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 28px;
-      color:white;
-      transition:0.3s;
-      z-index: 10;
-    }
-    .play-btn:hover { background: rgba(255,255,255,0.2); }
-    .video-container {
-      position: relative;
-      width: 100%; 
-      height: 200px; 
-      margin-top: 4px; 
-      border-radius: 10px; 
-      overflow: hidden;
-      display: none;
-    }
-    iframe {
-      width: 100%; 
-      height: 100%; 
-      border: none;
-    }
-    .custom-controls {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      display: flex;
-      align-items: center;
-      padding: 10px;
+    
+    * {
+      margin: 0;
+      padding: 0;
       box-sizing: border-box;
-      transition: opacity 0.3s;
-      opacity: 0;
-      z-index: 20;
-    }
-    .video-container:hover .custom-controls {
-      opacity: 1;
-    }
-    .control-btn {
-      background: none;
-      border: none;
-      color: white;
-      font-size: 20px;
-      cursor: pointer;
-      margin-right: 15px;
-    }
-    .progress-bar {
-      flex-grow: 1;
-      height: 5px;
-      background: #444;
-      border-radius: 5px;
-      margin: 0 15px;
-      position: relative;
-      cursor: pointer;
-    }
-    .progress {
-      height: 100%;
-      background: gray;
-      border-radius: 5px;
-      width: 0%;
-    }
-    .volume-control {
-      display: flex;
-      align-items: center;
-    }
-    .volume-slider {
-      width: 80px;
-      margin-left: 10px;
-    }
-    .info { 
-      margin-top: 2px; 
-      display:flex; 
-      align-items:center; 
-      justify-content: space-between; 
-    }
-    .map-code { font-weight:bold; font-size:16px; color:white; }
-    .copy-btn {
-      padding: 6px 12px; 
-      font-size: 13px;
-      border: none; border-radius: 6px;
-      background: grey; color:white; cursor:pointer;
-    }
-    .copy-btn:hover { background: thistle; }
-    
-    /* Toast notification */
-    .toast {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background-color: #333;
-      color: white;
-      padding: 12px 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-      z-index: 1000;
-      opacity: 0;
-      transition: opacity 0.3s;
     }
     
-    /* Loading indicator */
-    .loading {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100px;
-      color: #fff;
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--dark);
+      color: white;
+      line-height: 1.6;
     }
-    .spinner {
-      border: 4px solid rgba(255, 255, 255, 0.3);
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    
+    /* Header */
+    header {
+      background: linear-gradient(135deg, var(--secondary) 0%, var(--dark) 100%);
+      padding: 20px 0;
+      border-bottom: 1px solid var(--card-border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    
+    .logo i {
+      font-size: 28px;
+    }
+    
+    /* Hero Section */
+    .hero {
+      padding: 60px 0;
+      background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
+                  url('https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
+      background-size: cover;
+      background-position: center;
+      text-align: center;
+    }
+    
+    .profile-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 30px;
+      max-width: 800px;
+      margin: 0 auto;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      border: 1px solid var(--card-border);
+    }
+    
+    .profile-img {
+      width: 150px;
+      height: 150px;
       border-radius: 50%;
-      border-top: 4px solid gray;
-      width: 30px;
-      height: 30px;
-      animation: spin 1s linear infinite;
-      margin-right: 10px;
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+      border: 4px solid var(--primary);
+      margin: 0 auto 20px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(255,68,68,0.3);
     }
     
-    /* Scroll indicator */
-    .scroll-indicator {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: rgba(0, 0, 0, 0.7);
+    .profile-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .profile-name {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: var(--light);
+    }
+    
+    .profile-tag {
+      display: inline-block;
+      background: darkslateblue;
       color: white;
-      padding: 10px 15px;
+      padding: 5px 15px;
       border-radius: 20px;
       font-size: 14px;
-      z-index: 1000;
+      font-weight: 500;
+      margin-bottom: 20px;
+    }
+    
+    .profile-bio {
+      color: #ccc;
+      margin-bottom: 25px;
+      text-align: left;
+    }
+    
+    .uid {
+      background: var(--secondary);
+      padding: 10px 20px;
+      border-radius: 10px;
+      display: inline-block;
+      margin-top: 10px;
+      font-family: monospace;
+      border: 1px solid var(--card-border);
+    }
+    
+    /* Navigation */
+    .nav-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin: 30px 0;
+    }
+    
+    .tab {
+      padding: 12px 25px;
+      background: var(--secondary);
+      border-radius: 30px;
+      cursor: pointer;
+      transition: 0.3s;
+      border: 1px solid var(--card-border);
+      font-weight: 500;
       display: flex;
       align-items: center;
       gap: 8px;
     }
-    .sound-status {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: #4caf50;
-    }
-    .sound-status.muted {
-      background: #f44336;
+    
+    .tab:hover {
+      background: var(--primary);
+      transform: translateY(-3px);
     }
     
-    /* Video play indicator */
-    .video-play-indicator {
-      position: fixed;
-      top: 60px;
-      right: 20px;
-      background: rgba(0, 0, 0, 0.7);
-      color: white;
-      padding: 8px 12px;
-      border-radius: 20px;
-      font-size: 12px;
-      z-index: 1000;
+    .tab.active {
+      background: var(--primary);
+    }
+    
+    /* Content Sections */
+    .section {
       display: none;
+      padding: 40px 0;
+    }
+    
+    .section.active {
+      display: block;
+    }
+    
+    .section-title {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 30px;
+      text-align: center;
+      position: relative;
+    }
+    
+    .section-title:after {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 4px;
+      background: var(--primary);
+      margin: 10px auto;
+      border-radius: 2px;
+    }
+    
+    /* Maps Section */
+    .maps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 25px;
+    }
+    
+    .map-card {
+      background: var(--card-bg);
+      border-radius: 15px;
+      overflow: hidden;
+      border: 1px solid var(--card-border);
+      transition: 0.3s;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .map-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+    }
+    
+    .map-thumbnail {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+    
+    .map-content {
+      padding: 20px;
+    }
+    
+    .map-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: var(--light);
+    }
+    
+    .map-description {
+      color: var(--gray);
+      font-size: 14px;
+      margin-bottom: 15px;
+    }
+    
+    .map-codes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 15px;
+    }
+    
+    .map-code {
+      background: var(--secondary);
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 12px;
+      font-family: monospace;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .copy-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 3px;
+      padding: 3px 6px;
+      font-size: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    
+    .copy-btn:hover {
+      background: var(--primary-dark);
+    }
+    
+    .map-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+    
+    .map-link:hover {
+      color: #ff7777;
+    }
+    
+    /* Social Section */
+    .social-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    .social-card {
+      background: var(--card-bg);
+      border-radius: 15px;
+      padding: 20px;
+      text-align: center;
+      border: 1px solid var(--card-border);
+      transition: 0.3s;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .social-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    }
+    
+    .social-icon {
+      font-size: 30px;
+      margin-bottom: 12px;
+    }
+    
+    .social-name {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    
+    .social-desc {
+      color: var(--gray);
+      font-size: 12px;
+      margin-bottom: 15px;
+    }
+    
+    .social-btn {
+      display: inline-block;
+      padding: 8px 16px;
+      background: var(--primary);
+      color: white;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: 0.3s;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      font-size: 14px;
+    }
+    
+    .social-btn:hover {
+      background: var(--primary-dark);
+    }
+    
+    .yt { color: #ff0000; }
+    .wa { color: #25D366; }
+    .ig { color: #E4405F; }
+    .dc { color: #5865F2; }
+    
+    /* Footer */
+    footer {
+      background: var(--secondary);
+      padding: 30px 0;
+      text-align: center;
+      border-top: 1px solid var(--card-border);
+      margin-top: 50px;
+    }
+    
+    .footer-text {
+      color: var(--gray);
+      font-size: 14px;
+    }
+    
+    /* Loading Animation */
+    .loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px;
+    }
+    
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(255,255,255,0.1);
+      border-left-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* Toast Notification */
+  .toast {
+  position: fixed;
+  bottom: 30px;
+  left: 30%;
+  transform: translateX(-50%) translateY(100px);
+  background: dimgrey;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 5px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  z-index: 1000;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+    
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .nav-tabs {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .tab {
+        width: 80%;
+        justify-content: center;
+      }
+      
+      .profile-card {
+        padding: 20px;
+      }
+      
+      .maps-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .social-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      }
     }
   </style>
 </head>
 <body>
-
-  <!-- Scroll indicator -->
-  <div class="scroll-indicator">
-    <div class="sound-status" id="soundStatus"></div>
-    <span id="soundText">Sound: ON</span>
-  </div>
-  
-  <!-- Video play indicator -->
-  <div class="video-play-indicator" id="videoPlayIndicator"></div>
-
-  <!-- Search Section -->
-  <div class="search-container">
-    <button id="searchBtn" onclick="toggleSearch()">🔍 Search</button>
-    <input type="text" id="searchInput" placeholder="Search videos...">
-    <div class="chips">
-      <span class="chip" onclick="setSearch('Free Fire')">Free Fire</span>
-      <span class="chip" onclick="setSearch('Gameplay')">Gameplay</span>
-      <span class="chip" onclick="setSearch('Tutorial')">Tutorial</span>
+  <!-- Header -->
+  <header>
+    <div class="container">
+      <div class="logo">
+        <i class="fas fa-fire"></i>
+        <span>RUSHKEY</span>
+      </div>
     </div>
-  </div>
+  </header>
 
-  <!-- Videos -->
-  <div id="videoList">
-    <div class="loading">
-      <div class="spinner"></div>
-      <span></span>
-    </div>
-  </div>
-  
-  <!-- Toast notification -->
-  <div id="toast" class="toast"></div>
-
-  <!-- Firebase v9 SDK -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
-
-    // ✅ Firebase Config
-    const firebaseConfig = {
-      apiKey: "AIzaSyBe4FGAYsgFq5UXL-nqiomOHA6X3Jh7IKg",
-      authDomain: "happy-c4a22.firebaseapp.com",
-      databaseURL: "https://happy-c4a22-default-rtdb.firebaseio.com",
-      projectId: "happy-c4a22",
-      storageBucket: "happy-c4a22.firebasestorage.app",
-      messagingSenderId: "307926114887",
-      appId: "1:307926114887:web:c0b43266d4158329d5c762",
-      measurementId: "G-F7D1YDPJ0F"
-    };
-
-    // ✅ Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-
-    // Global variables for scroll control
-    let isSoundOn = true;
-    let scrollCount = 0;
-    let lastScrollTime = 0;
-    const SCROLL_COOLDOWN = 1000; // 1 second cooldown between scroll actions
-    let activeVideo = null;
-
-    // Improved scroll event handler
-    function handleScroll() {
-      const currentTime = Date.now();
-      
-      // Check if enough time has passed since last scroll action
-      if (currentTime - lastScrollTime < SCROLL_COOLDOWN) {
-        return;
-      }
-      
-      scrollCount++;
-      
-      // Toggle sound on every second scroll
-      if (scrollCount % 2 === 0) {
-        toggleAllVideosSound();
-        lastScrollTime = currentTime;
-      }
-      
-      // Check which video is in view and control it
-      controlVideoInView();
-    }
-
-    // Control video that's currently in view
-    function controlVideoInView() {
-      const videoContainers = document.querySelectorAll('.video-container[style*="display: block"]');
-      
-      // Find the video that's most in the viewport
-      let mostVisibleVideo = null;
-      let maxVisibility = 0;
-      
-      videoContainers.forEach(container => {
-        const rect = container.getBoundingClientRect();
-        const visibility = getElementVisibility(rect);
-        
-        if (visibility > maxVisibility && visibility > 0.5) {
-          maxVisibility = visibility;
-          mostVisibleVideo = container;
-        }
-      });
-      
-      // If we found a new video in view
-      if (mostVisibleVideo && mostVisibleVideo !== activeVideo) {
-        // Pause the previously active video
-        if (activeVideo) {
-          const prevIframe = activeVideo.querySelector('iframe');
-          if (prevIframe && prevIframe.contentWindow) {
-            const data = { method: 'pause' };
-            prevIframe.contentWindow.postMessage(JSON.stringify(data), '*');
-          }
-        }
-        
-        // Play the new video
-        activeVideo = mostVisibleVideo;
-        const iframe = activeVideo.querySelector('iframe');
-        if (iframe && iframe.contentWindow) {
-          const data = { method: 'play' };
-          iframe.contentWindow.postMessage(JSON.stringify(data), '*');
-          
-          // Show which video is playing
-          const videoCard = activeVideo.closest('.video-card');
-          const mapCode = videoCard.querySelector('.map-code').textContent;
-          showVideoPlayIndicator(`Playing: ${mapCode}`);
-        }
-      }
-    }
-
-    // Calculate how much of an element is visible in the viewport
-    function getElementVisibility(rect) {
-      const windowHeight = window.innerHeight || document.documentElement.clientHeight;
-      const windowWidth = window.innerWidth || document.documentElement.clientWidth;
-      
-      // Calculate visible area
-      const visibleTop = Math.max(0, Math.min(rect.bottom, windowHeight) - Math.max(rect.top, 0));
-      const visibleLeft = Math.max(0, Math.min(rect.right, windowWidth) - Math.max(rect.left, 0));
-      const visibleArea = visibleTop * visibleLeft;
-      const totalArea = rect.height * rect.width;
-      
-      return totalArea > 0 ? visibleArea / totalArea : 0;
-    }
-
-    // Show video play indicator
-    function showVideoPlayIndicator(message) {
-      const indicator = document.getElementById('videoPlayIndicator');
-      indicator.textContent = message;
-      indicator.style.display = 'block';
-      
-      setTimeout(() => {
-        indicator.style.display = 'none';
-      }, 2000);
-    }
-
-    // Toggle sound for all playing videos
-    function toggleAllVideosSound() {
-      isSoundOn = !isSoundOn;
-      
-      // Update UI indicator
-      const soundStatus = document.getElementById('soundStatus');
-      const soundText = document.getElementById('soundText');
-      
-      if (isSoundOn) {
-        soundStatus.classList.remove('muted');
-        soundText.textContent = 'Sound: ON';
-        showToast("Sound turned ON");
-      } else {
-        soundStatus.classList.add('muted');
-        soundText.textContent = 'Sound: OFF';
-        showToast("Sound turned OFF");
-      }
-      
-      // Apply to all playing videos
-      const playingVideos = document.querySelectorAll('.video-container[style*="display: block"] iframe');
-      playingVideos.forEach(iframe => {
-        if (iframe.contentWindow) {
-          const data = { 
-            method: 'setVolume', 
-            value: isSoundOn ? 1 : 0 
-          };
-          iframe.contentWindow.postMessage(JSON.stringify(data), '*');
-        }
-      });
-    }
-
-    // Show toast notification
-    function showToast(message) {
-      const toast = document.getElementById('toast');
-      toast.textContent = message;
-      toast.style.opacity = '1';
-      setTimeout(() => { toast.style.opacity = '0'; }, 3000);
-    }
-
-    // 🔍 Search toggle
-    window.toggleSearch = function() {
-      const input = document.getElementById("searchInput");
-      input.style.display = input.style.display === "none" || !input.style.display ? "inline-block" : "none";
-    }
-
-    // Chips → input me text set karna
-    window.setSearch = function(text) {
-      const input = document.getElementById("searchInput");
-      input.style.display = "inline-block";
-      input.value = text;
-      filterVideos(text.toLowerCase());
-    }
-
-    // Filter videos
-    function filterVideos(query) {
-      const cards = document.querySelectorAll(".video-card");
-      cards.forEach(card => {
-        const title = card.querySelector(".map-code").innerText.toLowerCase();
-        card.style.display = title.includes(query) ? "block" : "none";
-      });
-    }
-
-    // Search typing
-    document.getElementById("searchInput").addEventListener("input", e => {
-      filterVideos(e.target.value.toLowerCase());
-    });
-
-    // ✅ Copy to clipboard
-    window.copyCode = function(code) {
-      navigator.clipboard.writeText(code).then(() => {
-        showToast("Map code copied: ");
-      }).catch(err => {
-        showToast("❌ Failed to copy");
-        console.error('Could not copy text: ', err);
-      });
-    }
-
-    // Custom video controls
-    function setupCustomControls(iframe, container) {
-      const controls = document.createElement('div');
-      controls.className = 'custom-controls';
-      controls.innerHTML = `
-        <button class="control-btn play-pause">◼️</button>
-        <div class="progress-bar"><div class="progress"></div></div>
-        <div class="volume-control">
-          <button class="control-btn volume-btn">${isSoundOn ? '🔊' : '🔇'}</button>
-          <input type="range" class="volume-slider" min="0" max="1" step="0.1" value="${isSoundOn ? 1 : 0}">
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <div class="profile-card">
+        <div class="profile-img">
+          <img src="https://i.ibb.co/4ZTRR28W/Picsart-25-10-06-08-00-35-560.png" alt="Rishi - Free Fire Creator">
         </div>
-        <button class="control-btn fullscreen-btn">⛶</button>
-      `;
-      container.appendChild(controls);
+        <h1 class="profile-name">RUSHKEY</h1>
+        <div class="profile-tag">FREE FIRE INDIA CRAFTLAND TOP CREATOR</div>
+        <div class="profile-bio">
+          <p>Hey viewers, I am Rishi and this is my website, here you will find all the maps created by me.</p>
+        </div>
+        <div class="uid">Free Fire UID: 868374805</div>
+      </div>
+      
+      <!-- Navigation Tabs -->
+      <div class="nav-tabs">
+        <div class="tab active" data-tab="maps">
+          <i class="fas fa-map"></i>
+          <span>My Maps</span>
+        </div>
+        <div class="tab" data-tab="social">
+          <i class="fas fa-users"></i>
+          <span>Connect With Me</span>
+        </div>
+      </div>
+    </div>
+  </section>
 
-      if (iframe.src.includes('vimeo.com') && !iframe.src.includes('controls=0')) {
-        iframe.src += (iframe.src.includes('?') ? '&' : '?') + 'controls=0';
-      }
+  <!-- Maps Section -->
+  <section id="maps" class="section active">
+    <div class="container">
+      <h2 class="section-title">My Craftland Maps</h2>
+      <div class="maps-grid" id="maps-list">
+        <div class="loading">
+          <div class="spinner"></div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-      const playPauseBtn = controls.querySelector('.play-pause');
-      const progressBar = controls.querySelector('.progress');
-      const progressContainer = controls.querySelector('.progress-bar');
-      const volumeBtn = controls.querySelector('.volume-btn');
-      const volumeSlider = controls.querySelector('.volume-slider');
-      const fullscreenBtn = controls.querySelector('.fullscreen-btn');
+  <!-- Social Media Section -->
+  <section id="social" class="section">
+    <div class="container">
+      <h2 class="section-title">Connect With Me</h2>
+      <div class="social-grid">
+        <div class="social-card">
+          <div class="social-icon yt">
+            <i class="fab fa-youtube"></i>
+          </div>
+          <h3 class="social-name">YouTube</h3>
+          <p class="social-desc">Watch my latest Craftland tutorials and gameplay</p>
+          <button class="social-btn yt-btn" onclick="window.open('https://youtube.com','_blank')">
+            <i class="fab fa-youtube"></i> Subscribe
+          </button>
+        </div>
+        
+        <div class="social-card">
+          <div class="social-icon wa">
+            <i class="fab fa-whatsapp"></i>
+          </div>
+          <h3 class="social-name">WhatsApp</h3>
+          <p class="social-desc">Join our community for updates and discussions</p>
+          <button class="social-btn wa-btn" onclick="window.open('https://wa.me/91XXXXXXXXXX','_blank')">
+            <i class="fab fa-whatsapp"></i> Join Group
+          </button>
+        </div>
+        
+        <div class="social-card">
+          <div class="social-icon ig">
+            <i class="fab fa-instagram"></i>
+          </div>
+          <h3 class="social-name">Instagram</h3>
+          <p class="social-desc">Follow for behind-the-scenes and daily updates</p>
+          <button class="social-btn ig-btn" onclick="window.open('https://instagram.com','_blank')">
+            <i class="fab fa-instagram"></i> Follow
+          </button>
+        </div>
+        
+        <div class="social-card">
+          <div class="social-icon dc">
+            <i class="fab fa-discord"></i>
+          </div>
+          <h3 class="social-name">Discord</h3>
+          <p class="social-desc">Join our server to chat and play together</p>
+          <button class="social-btn dc-btn" onclick="window.open('https://discord.gg','_blank')">
+            <i class="fab fa-discord"></i> Join Server
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
 
-      function postMessageToPlayer(command, value) {
-        if (iframe.contentWindow) {
-          const data = { method: command };
-          if (value !== undefined) data.value = value;
-          iframe.contentWindow.postMessage(JSON.stringify(data), '*');
-        }
-      }
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p class="footer-text">© 2025 RUSHKEY.</p>
+      <p class="footer-text">Free Fire Craftland Map</p>
+    </div>
+  </footer>
 
-      window.addEventListener('message', function(event) {
-        try {
-          const data = JSON.parse(event.data);
-          if (data.event === 'play') playPauseBtn.textContent = '◼️';
-          else if (data.event === 'pause') playPauseBtn.textContent = '▶';
-          else if (data.event === 'timeupdate') {
-            if (data.data && data.data.duration && data.data.seconds) {
-              const percent = (data.data.seconds / data.data.duration) * 100;
-              progressBar.style.width = percent + '%';
-            }
-          }
-        } catch (e) {}
+  <!-- Toast Notification -->
+  <div class="toast" id="toast">Map copied!</div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <script>
+    // Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyArIw-i8vbkEmIsctxF4QFSwsAwDfGfRls",
+      authDomain: "craftland5-2213a.firebaseapp.com",
+      databaseURL: "https://craftland5-2213a-default-rtdb.firebaseio.com",
+      projectId: "craftland5-2213a",
+      storageBucket: "craftland5-2213a.firebasestorage.app",
+      messagingSenderId: "730201769685",
+      appId: "1:730201769685:web:4367b21cba168fa427445c"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // Tab navigation
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        // Remove active class from all tabs and sections
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        
+        // Add active class to clicked tab and corresponding section
+        tab.classList.add('active');
+        const tabId = tab.getAttribute('data-tab');
+        document.getElementById(tabId).classList.add('active');
+        
+        // Load maps if needed
+        if (tabId === "maps") loadMaps();
       });
+    });
 
-      playPauseBtn.addEventListener('click', () => {
-        if (playPauseBtn.textContent === '▶') {
-          postMessageToPlayer('play'); 
-          playPauseBtn.textContent = '◼️';
-        } else {
-          postMessageToPlayer('pause'); 
-          playPauseBtn.textContent = '▶';
-        }
-      });
-
-      progressContainer.addEventListener('click', e => {
-        const rect = progressContainer.getBoundingClientRect();
-        const percent = (e.clientX - rect.left) / rect.width;
-        postMessageToPlayer('seekTo', percent * 100);
-      });
-
-      volumeSlider.addEventListener('input', function() {
-        postMessageToPlayer('setVolume', this.value);
-        volumeBtn.textContent = this.value == 0 ? '🔇' : '🔊';
-      });
-
-      volumeBtn.addEventListener('click', function() {
-        if (volumeSlider.value > 0) { 
-          volumeSlider.value = 0; 
-          volumeBtn.textContent = '🔇'; 
-        } else { 
-          volumeSlider.value = 1; 
-          volumeBtn.textContent = '🔊'; 
-        }
-        postMessageToPlayer('setVolume', volumeSlider.value);
-      });
-
-      fullscreenBtn.addEventListener('click', () => {
-        if (!document.fullscreenElement) {
-          if (container.requestFullscreen) {
-            container.requestFullscreen();
-          } else if (container.webkitRequestFullscreen) {
-            container.webkitRequestFullscreen();
-          } else if (container.msRequestFullscreen) {
-            container.msRequestFullscreen();
-          }
-        } else {
-          if (document.exitFullscreen) {
-            document.exitFullscreen();
-          } else if (document.webkitExitFullscreen) {
-            document.webkitExitFullscreen();
-          } else if (document.msExitFullscreen) {
-            document.msExitFullscreen();
-          }
-        }
+    // Copy to clipboard function
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        // Show toast notification
+        const toast = document.getElementById('toast');
+        toast.classList.add('show');
+        setTimeout(() => {
+          toast.classList.remove('show');
+        }, 2000);
       });
     }
 
-    // ✅ Firebase se videos fetch
-    const videoRef = ref(db, "videos");
-    onValue(videoRef, snapshot => {
-      const list = document.getElementById("videoList");
-      list.innerHTML = "";
-      if (!snapshot.exists()) {
-        list.innerHTML = '<div class="loading">No videos found</div>';
-        return;
-      }
-      snapshot.forEach(child => {
-        const data = child.val();
-        let embedUrl = data.videoUrl;
-        if (embedUrl.includes("vimeo.com") && !embedUrl.includes("player.vimeo.com")) {
-          const videoId = embedUrl.split("/").pop();
-          embedUrl = `https://player.vimeo.com/video/${videoId}?autoplay=1&muted=1`;
+    // Load maps from Firebase
+    function loadMaps() {
+      const list = document.getElementById('maps-list');
+      list.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+      
+      db.ref("craftland_maps").on("value", snapshot => {
+        list.innerHTML = "";
+        
+        if (!snapshot.exists()) {
+          list.innerHTML = `
+            <div style="text-align: center; padding: 40px; color: #888;">
+              <i class="fas fa-map-marked-alt" style="font-size: 50px; margin-bottom: 15px;"></i>
+              <h3>No maps uploaded yet</h3>
+              <p>Check back soon for new Craftland maps!</p>
+            </div>
+          `;
+          return;
         }
-        const card = document.createElement("div");
-        card.className = "video-card";
-        card.innerHTML = `
-          <div class="thumb" style="background-image:url('${data.thumbUrl}')">
-            <div class="play-btn">▶</div>
-          </div>
-          <div>MapCode  ⬇️</div>
-           <button class="copy-btn" onclick="copyCode('${data.mapCode}')">Copy</button>
-          <div class="info">
-            <span class="map-code">${data.mapCode}</span>
-          </div>
-          <div class="video-container">
-            <iframe src="${embedUrl}" allow="autoplay; fullscreen"></iframe>
-          </div>
-        `;
-        const thumb = card.querySelector(".thumb");
-        const videoContainer = card.querySelector(".video-container");
-        const iframe = card.querySelector("iframe");
-        function playVideo() {
-          thumb.style.display = "none";
-          videoContainer.style.display = "block";
-          setTimeout(() => setupCustomControls(iframe, videoContainer), 1000);
-        }
-        thumb.onclick = playVideo;
-        list.appendChild(card);
+        
+        snapshot.forEach(child => {
+          const map = child.val();
+          const div = document.createElement("div");
+          div.className = "map-card";
+          
+          // Create map codes with copy buttons
+          let mapCodesHTML = "";
+          if (map.mapCodes) {
+            mapCodesHTML = map.mapCodes.map(code => 
+              `
+              <div>
+                <button class="copy-btn" onclick="copyToClipboard('${code}')">
+                  <i class="fas fa-copy"></i>
+                </button>
+              </div>
+              <span class="map-code">${code} 
+              
+              </span>`
+            ).join("");
+          }
+          
+          div.innerHTML = `
+            <img src="${map.thumbnail}" alt="Thumbnail" class="map-thumbnail">
+            <div class="map-content">
+              <h3 class="map-title">${map.title}</h3>
+              <p class="map-description">${map.description || "No description available."}</p>
+              <div class="map-codes">
+                ${mapCodesHTML}
+              </div>
+              ${map.youtube ? `<a href="${map.youtube}" target="_blank" class="map-link"><i class="fab fa-youtube"></i> Watch on YouTube</a>` : ""}
+            </div>
+          `;
+          list.appendChild(div);
+        });
       });
-    }, err => {
-      document.getElementById("videoList").innerHTML = '<div class="loading">Error loading videos</div>';
-      console.error(err);
-    });
+    }
 
-    // Add scroll event listener with throttling
-    let isScrolling;
-    window.addEventListener('scroll', function() {
-      window.clearTimeout(isScrolling);
-      isScrolling = setTimeout(function() {
-        handleScroll();
-      }, 100);
-    }, false);
+    // Load maps on page load if we're on the maps section
+    document.addEventListener('DOMContentLoaded', () => {
+      if (document.getElementById('maps').classList.contains('active')) {
+        loadMaps();
+      }
+    });
   </script>
 </body>
 </html>

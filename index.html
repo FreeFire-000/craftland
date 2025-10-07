@@ -10,7 +10,8 @@
     </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RUSHKEYfam - Free Fire Craftland Creator</title>
+  <title>RUSHKEY - Free Fire Craftland</title>
+  <link rel="icon" type="image/png" href="logo.png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
@@ -272,6 +273,22 @@
       background: var(--primary-dark);
     }
     
+    .share-btn {
+      background: #25D366;
+      color: white;
+      border: none;
+      border-radius: 3px;
+      padding: 3px 6px;
+      font-size: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+      margin-left: 5px;
+    }
+    
+    .share-btn:hover {
+      background: #1da851;
+    }
+    
     .map-link {
       display: inline-flex;
       align-items: center;
@@ -350,6 +367,7 @@
     .wa { color: #25D366; }
     .ig { color: #E4405F; }
     .dc { color: #5865F2; }
+    .tg { color: #0088cc; }
     
     /* Footer */
     footer {
@@ -387,23 +405,23 @@
     }
     
     /* Toast Notification */
-  .toast {
-  position: fixed;
-  bottom: 30px;
-  left: 30%;
-  transform: translateX(-50%) translateY(100px);
-  background: dimgrey;
-  color: white;
-  padding: 12px 20px;
-  border-radius: 5px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-  z-index: 1000;
-  opacity: 0;
-  transition: all 0.3s ease;
-}
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: dimgrey;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 5px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      z-index: 1000;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
     
     .toast.show {
-      transform: translateY(0);
+      transform: translateX(-50%) translateY(0);
       opacity: 1;
     }
     
@@ -454,7 +472,7 @@
         <h1 class="profile-name">RUSHKEY</h1>
         <div class="profile-tag">FREE FIRE INDIA CRAFTLAND TOP CREATOR</div>
         <div class="profile-bio">
-          <p>Hey viewers, I am Rishi and this is my website, here you will find all the maps created by me.</p>
+          <p>Craftland Map Codes | Updates</p>
         </div>
         <div class="uid">Free Fire UID: 868374805</div>
       </div>
@@ -496,7 +514,7 @@
           </div>
           <h3 class="social-name">YouTube</h3>
           <p class="social-desc">Watch my latest Craftland tutorials and gameplay</p>
-          <button class="social-btn yt-btn" onclick="window.open('https://youtube.com','_blank')">
+          <button class="social-btn yt-btn" onclick="window.open('https://youtube.com/@rushkey07?si=lK2CdvjvYzzBBFTJ','_blank')">
             <i class="fab fa-youtube"></i> Subscribe
           </button>
         </div>
@@ -505,20 +523,39 @@
           <div class="social-icon wa">
             <i class="fab fa-whatsapp"></i>
           </div>
-          <h3 class="social-name">WhatsApp</h3>
+          <h3 class="social-name">WhatsApp Channel 1</h3>
           <p class="social-desc">Join our community for updates and discussions</p>
-          <button class="social-btn wa-btn" onclick="window.open('https://wa.me/91XXXXXXXXXX','_blank')">
+          <button class="social-btn wa-btn" onclick="window.open('https://www.whatsapp.com/channel/0029Vawsac66hENqqr9q2Z0C','_blank')">
             <i class="fab fa-whatsapp"></i> Join Group
           </button>
         </div>
-        
+         <div class="social-card">
+          <div class="social-icon wa">
+            <i class="fab fa-whatsapp"></i>
+          </div>
+          <h3 class="social-name">WhatsApp Channel 2</h3>
+          <p class="social-desc">Join our community for updates and discussions</p>
+          <button class="social-btn wa-btn" onclick="window.open('https://www.whatsapp.com/channel/0029Vawsac66hENqqr9q2Z0C','_blank')">
+            <i class="fab fa-whatsapp"></i> Join Group
+          </button>
+        </div>
+        <div class="social-card">
+          <div class="social-icon tg">
+            <i class="fab fa-telegram"></i>
+          </div>
+          <h3 class="social-name">Telegram</h3>
+          <p class="social-desc">Join our community for updates and discussions</p>
+          <button class="social-btn tg-btn" onclick="window.open('https://t.me/AllGamesMods','_blank')">
+            <i class="fab fa-telegram"></i> Follow
+          </button>
+        </div>
         <div class="social-card">
           <div class="social-icon ig">
             <i class="fab fa-instagram"></i>
           </div>
           <h3 class="social-name">Instagram</h3>
           <p class="social-desc">Follow for behind-the-scenes and daily updates</p>
-          <button class="social-btn ig-btn" onclick="window.open('https://instagram.com','_blank')">
+          <button class="social-btn ig-btn" onclick="window.open('https://www.instagram.com/rushkey07?igsh=dWppbmFvZ3pkc290','_blank')">
             <i class="fab fa-instagram"></i> Follow
           </button>
         </div>
@@ -529,7 +566,7 @@
           </div>
           <h3 class="social-name">Discord</h3>
           <p class="social-desc">Join our server to chat and play together</p>
-          <button class="social-btn dc-btn" onclick="window.open('https://discord.gg','_blank')">
+          <button class="social-btn dc-btn" onclick="window.open('https://discord.gg/6B5tSz6S','_blank')">
             <i class="fab fa-discord"></i> Join Server
           </button>
         </div>
@@ -587,11 +624,52 @@
       navigator.clipboard.writeText(text).then(() => {
         // Show toast notification
         const toast = document.getElementById('toast');
+        toast.textContent = "Map code copied!";
         toast.classList.add('show');
         setTimeout(() => {
           toast.classList.remove('show');
         }, 2000);
       });
+    }
+
+    // Share map function
+    function shareMap(mapId, mapTitle) {
+      const shareUrl = `${window.location.origin}${window.location.pathname}?map=${mapId}`;
+      navigator.clipboard.writeText(shareUrl).then(() => {
+        // Show toast notification
+        const toast = document.getElementById('toast');
+        toast.textContent = "Share link copied!";
+        toast.classList.add('show');
+        setTimeout(() => {
+          toast.classList.remove('show');
+        }, 2000);
+      });
+    }
+
+    // Load specific map if URL parameter exists
+    function loadSpecificMap() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const mapId = urlParams.get('map');
+      
+      if (mapId) {
+        // Switch to maps tab
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.querySelector('[data-tab="maps"]').classList.add('active');
+        document.getElementById('maps').classList.add('active');
+        
+        // Highlight the specific map
+        setTimeout(() => {
+          const mapElement = document.querySelector(`[data-map-id="${mapId}"]`);
+          if (mapElement) {
+            mapElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            mapElement.style.boxShadow = '0 0 0 3px var(--primary)';
+            setTimeout(() => {
+              mapElement.style.boxShadow = '';
+            }, 3000);
+          }
+        }, 1000);
+      }
     }
 
     // Load maps from Firebase
@@ -615,22 +693,26 @@
         
         snapshot.forEach(child => {
           const map = child.val();
+          const mapId = child.key;
           const div = document.createElement("div");
           div.className = "map-card";
+          div.setAttribute("data-map-id", mapId);
           
-          // Create map codes with copy buttons
+          // Create map codes with copy and share buttons
           let mapCodesHTML = "";
           if (map.mapCodes) {
             mapCodesHTML = map.mapCodes.map(code => 
               `
-              <div>
+              <div class="map-code">
+                
                 <button class="copy-btn" onclick="copyToClipboard('${code}')">
                   <i class="fas fa-copy"></i>
                 </button>
-              </div>
-              <span class="map-code">${code} 
-              
-              </span>`
+                <button class="share-btn" onclick="shareMap('${mapId}', '${map.title}')">
+                  <i class="fas fa-share"></i>
+                </button>
+                ${code}
+              </div>`
             ).join("");
           }
           
@@ -655,6 +737,7 @@
       if (document.getElementById('maps').classList.contains('active')) {
         loadMaps();
       }
+      loadSpecificMap();
     });
   </script>
 </body>

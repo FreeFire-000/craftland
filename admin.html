@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Craftland Map Admin Panel</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0f0f0f 0%, #232323 100%);
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+      margin: 0;
+    }
+    .container {
+      background: #1e1e1e;
+      padding: 25px;
+      border-radius: 15px;
+      width: 90%;
+      max-width: 450px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      border: 1px solid #333;
+    }
+    h2 {
+      text-align: center;
+      margin-top: 0;
+      color: #ff4444;
+      font-size: 28px;
+      margin-bottom: 25px;
+    }
+    h3 {
+      color: #ddd;
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+    input, textarea, button {
+      width: 100%;
+      margin: 10px 0;
+      padding: 12px 15px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      box-sizing: border-box;
+      font-size: 16px;
+    }
+    input, textarea {
+      background: #2a2a2a;
+      color: white;
+      border: 1px solid #444;
+      transition: border-color 0.3s;
+    }
+    input:focus, textarea:focus {
+      border-color: #ff4444;
+    }
+    button {
+      background: #ff4444;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s;
+      padding: 14px;
+    }
+    button:hover {
+      background: #ff5555;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(255, 68, 68, 0.3);
+    }
+    button:active {
+      transform: translateY(0);
+    }
+    button:disabled {
+      background: #555;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+    .add-btn {
+      background: #4c7fff;
+      margin-bottom: 15px;
+    }
+    .add-btn:hover {
+      background: #5c8aff;
+      box-shadow: 0 5px 15px rgba(76, 127, 255, 0.3);
+    }
+    .map-code-container {
+      position: relative;
+      margin-bottom: 10px;
+    }
+    .remove-btn {
+      position: absolute;
+      right: 5px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 30px;
+      height: 30px;
+      background: #ff4444;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      margin: 0;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    
+    /* Thumbnail Upload Styles */
+    .thumbnail-upload-container {
+      margin: 20px 0;
+      text-align: center;
+    }
+    .thumbnail-label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 10px;
+      text-align: left;
+      color: #ddd;
+    }
+    .thumbnail-upload-box {
+      border: 2px dashed #555;
+      border-radius: 10px;
+      padding: 25px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      background: #252525;
+    }
+    .thumbnail-upload-box:hover {
+      border-color: #ff4444;
+      background: #2a2a2a;
+    }
+    .upload-icon {
+      font-size: 50px;
+      color: #666;
+      margin-bottom: 15px;
+    }
+    .upload-text {
+      color: #aaa;
+      margin-bottom: 15px;
+    }
+    .upload-text strong {
+      color: #4c7fff;
+    }
+    .upload-hint {
+      color: #666;
+      font-size: 13px;
+      margin-top: 5px;
+    }
+    #thumbnail {
+      display: none;
+    }
+    #fileName {
+      margin-top: 10px;
+      color: #4c7fff;
+      font-style: italic;
+    }
+    #status {
+      text-align: center;
+      margin-top: 20px;
+      min-height: 24px;
+      color: #4c7fff;
+    }
+    .success {
+      color: #4CAF50 !important;
+    }
+    .error {
+      color: #ff4444 !important;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2><i class="fas fa-map-marked-alt"></i> Upload Craftland Map</h2>
+    <input type="text" id="title" placeholder="Enter Map Title" required>
+    <textarea id="description" placeholder="Enter Description" rows="3"></textarea>
+    <input type="text" id="youtube" placeholder="Enter YouTube URL">
+    
+    <h3><i class="fas fa-code"></i> Map Codes</h3>
+    <div id="map-codes-container">
+      <div class="map-code-container">
+        <input type="text" class="map-code" placeholder="Enter Map Code" required>
+      </div>
+    </div>
+    
+    <button id="addCodeBtn" class="add-btn"><i class="fas fa-plus"></i> Add Another Code</button>
+    
+    <div class="thumbnail-upload-container">
+      <span class="thumbnail-label"><i class="fas fa-image"></i> Thumbnail</span>
+      <label for="thumbnail">
+        <div class="thumbnail-upload-box">
+          <div class="upload-icon">
+            <i class="fas fa-cloud-upload-alt"></i>
+          </div>
+          <div class="upload-text">
+            <strong>Click to upload</strong> or drag and drop
+          </div>
+          <div class="upload-hint">
+            PNG, JPG or GIF (max 30MB)
+          </div>
+        </div>
+      </label>
+      <div id="fileName"></div>
+    </div>
+    
+    <input type="file" id="thumbnail" accept="image/*">
+    <button id="uploadBtn"><i class="fas fa-upload"></i> Upload Map</button>
+    <p id="status"></p>
+  </div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+  <script>
+    // Firebase configuration (replace with your own)
+    const firebaseConfig = {
+  apiKey: "AIzaSyArIw-i8vbkEmIsctxF4QFSwsAwDfGfRls",
+  authDomain: "craftland5-2213a.firebaseapp.com",
+  databaseURL: "https://craftland5-2213a-default-rtdb.firebaseio.com",
+  projectId: "craftland5-2213a",
+  storageBucket: "craftland5-2213a.firebasestorage.app",
+  messagingSenderId: "730201769685",
+  appId: "1:730201769685:web:4367b21cba168fa427445c"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // ImgBB API Key (replace with your own)
+    const imgbbApiKey = "75c50f78e44ef8d7bf0d6d913c42c689";
+
+    // Map codes functionality
+    const mapCodesContainer = document.getElementById('map-codes-container');
+    const addCodeBtn = document.getElementById('addCodeBtn');
+    let mapCodeCount = 1;
+    const maxMapCodes = 6;
+
+    addCodeBtn.addEventListener('click', () => {
+      if (mapCodeCount < maxMapCodes) {
+        const newMapCode = document.createElement('div');
+        newMapCode.className = 'map-code-container';
+        newMapCode.innerHTML = `
+          <input type="text" class="map-code" placeholder="Enter Map Code">
+          <button class="remove-btn">×</button>
+        `;
+        mapCodesContainer.appendChild(newMapCode);
+        
+        // Add event listener to the remove button
+        newMapCode.querySelector('.remove-btn').addEventListener('click', () => {
+          newMapCode.remove();
+          mapCodeCount--;
+          updateAddButtonState();
+        });
+        
+        mapCodeCount++;
+        updateAddButtonState();
+      }
+    });
+
+    function updateAddButtonState() {
+      if (mapCodeCount >= maxMapCodes) {
+        addCodeBtn.disabled = true;
+        addCodeBtn.textContent = 'Maximum 6 codes reached';
+      } else {
+        addCodeBtn.disabled = false;
+        addCodeBtn.innerHTML = '<i class="fas fa-plus"></i> Add Another Code';
+      }
+    }
+
+    // Thumbnail upload functionality
+    const thumbnailInput = document.getElementById('thumbnail');
+    const fileNameDisplay = document.getElementById('fileName');
+    const thumbnailBox = document.querySelector('.thumbnail-upload-box');
+    const uploadIcon = document.querySelector('.upload-icon');
+    
+    thumbnailInput.addEventListener('change', function() {
+      if (this.files && this.files[0]) {
+        const file = this.files[0];
+        
+        // Display file name
+        fileNameDisplay.textContent = `Selected: ${file.name}`;
+        
+        // Show preview if it's an image
+        if (file.type.match('image.*')) {
+          const reader = new FileReader();
+          
+          reader.onload = function(e) {
+            // Change the upload box to show a preview
+            uploadIcon.innerHTML = `<img src="${e.target.result}" style="max-width: 100px; max-height: 80px; border-radius: 5px;">`;
+            thumbnailBox.style.borderStyle = 'solid';
+            thumbnailBox.style.borderColor = '#4CAF50';
+          }
+          
+          reader.readAsDataURL(file);
+        }
+      }
+    });
+
+    // Drag and drop functionality
+    thumbnailBox.addEventListener('dragover', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      this.style.borderColor = '#4c7fff';
+      this.style.backgroundColor = '#2a2a2a';
+    });
+
+    thumbnailBox.addEventListener('dragleave', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      this.style.borderColor = '#555';
+      this.style.backgroundColor = '#252525';
+    });
+
+    thumbnailBox.addEventListener('drop', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      this.style.borderColor = '#555';
+      this.style.backgroundColor = '#252525';
+      
+      const files = e.dataTransfer.files;
+      if (files.length) {
+        thumbnailInput.files = files;
+        
+        // Trigger the change event manually
+        const event = new Event('change');
+        thumbnailInput.dispatchEvent(event);
+      }
+    });
+
+    // Upload functionality
+    document.getElementById("uploadBtn").addEventListener("click", async () => {
+      let title = document.getElementById("title").value;
+      let description = document.getElementById("description").value;
+      let youtube = document.getElementById("youtube").value;
+      let file = document.getElementById("thumbnail").files[0];
+      let status = document.getElementById("status");
+      
+      // Get all map codes
+      const mapCodeInputs = document.querySelectorAll('.map-code');
+      const mapCodes = Array.from(mapCodeInputs).map(input => input.value).filter(code => code.trim() !== '');
+
+      if (!title || !file || mapCodes.length === 0) {
+        status.textContent = "Error: Title, at least one Map Code, and Thumbnail are required!";
+        status.className = 'error';
+        return;
+      }
+
+      status.textContent = "Uploading thumbnail...";
+      status.className = '';
+
+      // Upload to ImgBB
+      let formData = new FormData();
+      formData.append("image", file);
+
+      try {
+        let upload = await fetch(`https://api.imgbb.com/1/upload?key=${imgbbApiKey}`, {
+          method: "POST",
+          body: formData
+        });
+
+        let imgData = await upload.json();
+        if (!imgData.success) {
+          status.textContent = "Thumbnail upload failed!";
+          status.className = 'error';
+          return;
+        }
+
+        let imageUrl = imgData.data.url;
+
+        // Save to Firebase
+        let newRef = db.ref("craftland_maps").push();
+        await newRef.set({
+          title: title,
+          description: description,
+          youtube: youtube,
+          thumbnail: imageUrl,
+          mapCodes: mapCodes,
+          timestamp: Date.now()
+        });
+
+        status.textContent = "Map uploaded successfully ✅";
+        status.className = 'success';
+        
+        // Reset form
+        document.getElementById("title").value = "";
+        document.getElementById("description").value = "";
+        document.getElementById("youtube").value = "";
+        document.getElementById("thumbnail").value = "";
+        fileNameDisplay.textContent = "";
+        
+        // Reset thumbnail preview
+        uploadIcon.innerHTML = '<i class="fas fa-cloud-upload-alt"></i>';
+        thumbnailBox.style.borderStyle = 'dashed';
+        thumbnailBox.style.borderColor = '#555';
+        
+        // Remove all but the first map code input
+        const mapCodeContainers = document.querySelectorAll('.map-code-container');
+        for (let i = 1; i < mapCodeContainers.length; i++) {
+          mapCodeContainers[i].remove();
+        }
+        
+        // Clear the first input
+        document.querySelector('.map-code').value = "";
+        mapCodeCount = 1;
+        updateAddButtonState();
+        
+      } catch (error) {
+        status.textContent = "Error: " + error.message;
+        status.className = 'error';
+      }
+    });
+  </script>
+
+</body>
+</html>

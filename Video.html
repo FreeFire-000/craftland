@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-2KQ4X0E33T"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-2KQ4X0E33T');
+    </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Videos with Smart Scroll Control</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background:#000;
+      color:#fff;
+      transition: background-color 0.3s;
+    }
+    h2 { margin-bottom: 15px; }
+
+    /* Search */
+    .search-container { margin-bottom: 20px; }
+    #searchInput {
+      display: none;
+      padding: 8px;
+      width: 100%;
+      border: 1px solid #444;
+      border-radius: 50px;
+      background:#111;
+      color:white;
+    }
+   #searchBtn {
+  padding: 7px 7px;
+  margin-bottom: 9px;
+  border: 2px solid #2196f3;
+  background: transparent;
+  color: white;
+  border-radius: 30px;
+  cursor: pointer;
+  width: 40px;
+  font-size: 20px;
+
+  /* 👇 Button shadow */
+  box-shadow: 0 0 10px #2196f3, 0 0 20px #2196f3 inset;
+
+  /* Optional hover effect */
+  transition: 0.3s ease;
+}
+
+#searchBtn:hover {
+  box-shadow: 0 0 15px #64b5f6, 0 0 25px #2196f3 inset;
+  transform: scale(1.1);
+}
+    /* Chips */
+    .chips { margin-top: 10px; }
+    .chip {
+      display: inline-block;
+      padding: 8px 14px;
+      margin: 5px;
+      background: #222;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: 0.3s;
+      color:#fff;
+    }
+    .chip:hover { background:#333; }
+
+    /* Video Cards */
+    .video-card {
+      background: #111;
+      padding: 12px;
+      margin: 20px 0;
+      border-radius: 14px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.7);
+      overflow:hidden;
+      position: relative;
+    }
+    .thumb {
+      width: 100%; 
+      height: 190px; 
+      border-radius: 12px;
+      background-size: cover; 
+      background-position: center;
+      position: relative;
+      cursor:pointer;
+    }
+    .play-btn {
+      position: absolute; 
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 70px; height: 70px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.7);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px;
+      color:white;
+      transition:0.3s;
+      z-index: 10;
+    }
+    .play-btn:hover { background: rgba(255,255,255,0.2); }
+    .video-container {
+      position: relative;
+      width: 100%; 
+      height: 200px; 
+      margin-top: 4px; 
+      border-radius: 10px; 
+      overflow: hidden;
+      display: none;
+    }
+    iframe {
+      width: 100%; 
+      height: 100%; 
+      border: none;
+    }
+    .custom-controls {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      box-sizing: border-box;
+      transition: opacity 0.3s;
+      opacity: 0;
+      z-index: 20;
+    }
+    .video-container:hover .custom-controls {
+      opacity: 1;
+    }
+    .control-btn {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+      margin-right: 15px;
+    }
+    .progress-bar {
+      flex-grow: 1;
+      height: 5px;
+      background: #444;
+      border-radius: 5px;
+      margin: 0 15px;
+      position: relative;
+      cursor: pointer;
+    }
+    .progress {
+      height: 100%;
+      background: gray;
+      border-radius: 5px;
+      width: 0%;
+    }
+    .volume-control {
+      display: flex;
+      align-items: center;
+    }
+    .volume-slider {
+      width: 80px;
+      margin-left: 10px;
+    }
+    .info { 
+      margin-top: 2px; 
+      display:flex; 
+      align-items:center; 
+      justify-content: space-between; 
+    }
+    .map-code { font-weight:bold; font-size:16px; color:white; }
+    .copy-btn {
+      padding: 6px 12px; 
+      font-size: 13px;
+      border: none; border-radius: 6px;
+      background: grey; color:white; cursor:pointer;
+    }
+    .copy-btn:hover { background: thistle; }
+    
+    /* Toast notification */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #333;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    /* Loading indicator */
+    .loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100px;
+      color: #fff;
+    }
+    .spinner {
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top: 4px solid gray;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin-right: 10px;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    /* Scroll indicator */
+    .scroll-indicator {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 10px 15px;
+      border-radius: 20px;
+      font-size: 14px;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .sound-status {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #4caf50;
+    }
+    .sound-status.muted {
+      background: #f44336;
+    }
+    
+    /* Video play indicator */
+    .video-play-indicator {
+      position: fixed;
+      top: 60px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 8px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      z-index: 1000;
+      display: none;
+    }
+    
+    /* Fullscreen styles */
+    .video-container:fullscreen {
+      width: 100vw;
+      height: 100vh;
+      border-radius: 0;
+      background: black;
+    }
+    .video-container:fullscreen iframe {
+      width: 100%;
+      height: 100%;
+    }
+    .video-container:fullscreen .custom-controls {
+      padding: 15px;
+      font-size: 24px;
+    }
+    .video-container:fullscreen .control-btn {
+      font-size: 24px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Scroll indicator -->
+  <div class="scroll-indicator">
+    <div class="sound-status" id="soundStatus"></div>
+    <span id="soundText">Craft-x</span>
+  </div>
+  
+  <!-- Video play indicator -->
+  <div class="video-play-indicator" id="videoPlayIndicator"></div>
+
+  <!-- Search Section -->
+  <div class="search-container">
+    <button id="searchBtn" onclick="toggleSearch()">🔍 </button>
+    <input type="text" id="searchInput" placeholder="Search videos...">
+    <div class="chips">
+      <span class="chip" onclick="setSearch('script')">Script</span>
+      <span class="chip" onclick="setSearch('Map')">Map</span>
+      <span class="chip" onclick="setSearch('1v1')">1v1</span>
+    </div>
+  </div>
+
+  <!-- Videos -->
+  <div id="videoList">
+    <div class="loading">
+      <div class="spinner"></div>
+      <span></span>
+    </div>
+  </div>
+  
+  <!-- Toast notification -->
+  <div id="toast" class="toast"></div>
+
+  <!-- Firebase v9 SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+    // ✅ Firebase Config
+    const firebaseConfig = {
+      apiKey: "AIzaSyBe4FGAYsgFq5UXL-nqiomOHA6X3Jh7IKg",
+      authDomain: "happy-c4a22.firebaseapp.com",
+      databaseURL: "https://happy-c4a22-default-rtdb.firebaseio.com",
+      projectId: "happy-c4a22",
+      storageBucket: "happy-c4a22.firebasestorage.app",
+      messagingSenderId: "307926114887",
+      appId: "1:307926114887:web:c0b43266d4158329d5c762",
+      measurementId: "G-F7D1YDPJ0F"
+    };
+
+    // ✅ Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // Global variables for scroll control
+    let isSoundOn = true;
+    let scrollCount = 0;
+    let lastScrollTime = 0;
+    const SCROLL_COOLDOWN = 1000; // 1 second cooldown between scroll actions
+    let activeVideo = null;
+    let lastClickedVideo = null;
+    let clickCooldown = false;
+
+    // Improved scroll event handler
+    function handleScroll() {
+      const currentTime = Date.now();
+      
+      // Check if enough time has passed since last scroll action
+      if (currentTime - lastScrollTime < SCROLL_COOLDOWN) {
+        return;
+      }
+      
+      scrollCount++;
+      
+      // Toggle sound on every second scroll
+      if (scrollCount % 2 === 0) {
+        toggleAllVideosSound();
+        lastScrollTime = currentTime;
+      }
+      
+      // Check which video is in view and control it
+      controlVideoInView();
+    }
+
+    // Control video that's currently in view
+    function controlVideoInView() {
+      const videoContainers = document.querySelectorAll('.video-container[style*="display: block"]');
+      
+      // Find the video that's most in the viewport
+      let mostVisibleVideo = null;
+      let maxVisibility = 0;
+      
+      videoContainers.forEach(container => {
+        const rect = container.getBoundingClientRect();
+        const visibility = getElementVisibility(rect);
+        
+        if (visibility > maxVisibility && visibility > 0.5) {
+          maxVisibility = visibility;
+          mostVisibleVideo = container;
+        }
+      });
+      
+      // If we found a new video in view
+      if (mostVisibleVideo && mostVisibleVideo !== activeVideo) {
+        // Pause the previously active video
+        if (activeVideo) {
+          const prevIframe = activeVideo.querySelector('iframe');
+          if (prevIframe && prevIframe.contentWindow) {
+            const data = { method: 'pause' };
+            prevIframe.contentWindow.postMessage(JSON.stringify(data), '*');
+          }
+        }
+        
+        // Play the new video
+        activeVideo = mostVisibleVideo;
+        const iframe = activeVideo.querySelector('iframe');
+        if (iframe && iframe.contentWindow) {
+          const data = { method: 'play' };
+          iframe.contentWindow.postMessage(JSON.stringify(data), '*');
+          
+          // Show which video is playing
+          const videoCard = activeVideo.closest('.video-card');
+          const mapCode = videoCard.querySelector('.map-code').textContent;
+          showVideoPlayIndicator(`Playing: ${mapCode}`);
+        }
+      }
+    }
+
+    // Calculate how much of an element is visible in the viewport
+    function getElementVisibility(rect) {
+      const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+      const windowWidth = window.innerWidth || document.documentElement.clientWidth;
+      
+      // Calculate visible area
+      const visibleTop = Math.max(0, Math.min(rect.bottom, windowHeight) - Math.max(rect.top, 0));
+      const visibleLeft = Math.max(0, Math.min(rect.right, windowWidth) - Math.max(rect.left, 0));
+      const visibleArea = visibleTop * visibleLeft;
+      const totalArea = rect.height * rect.width;
+      
+      return totalArea > 0 ? visibleArea / totalArea : 0;
+    }
+
+    // Show video play indicator
+    function showVideoPlayIndicator(message) {
+      const indicator = document.getElementById('videoPlayIndicator');
+      indicator.textContent = message;
+      indicator.style.display = 'block';
+      
+      setTimeout(() => {
+        indicator.style.display = 'none';
+      }, 2000);
+    }
+
+    // Toggle sound for all playing videos
+    function toggleAllVideosSound() {
+      isSoundOn = !isSoundOn;
+      
+      // Update UI indicator
+      const soundStatus = document.getElementById('soundStatus');
+      const soundText = document.getElementById('soundText');
+      
+      if (isSoundOn) {
+        soundStatus.classList.remove('muted');
+        soundText.textContent = 'Craft-x: 🛜';
+        showToast("Sound turned ON");
+      } else {
+        soundStatus.classList.add('muted');
+        soundText.textContent = 'Sound: ';
+        showToast("Sound turned OFF");
+      }
+      
+      // Apply to all playing videos
+      const playingVideos = document.querySelectorAll('.video-container[style*="display: block"] iframe');
+      playingVideos.forEach(iframe => {
+        if (iframe.contentWindow) {
+          const data = { 
+            method: 'setVolume', 
+            value: isSoundOn ? 1 : 0 
+          };
+          iframe.contentWindow.postMessage(JSON.stringify(data), '*');
+        }
+      });
+    }
+
+    // Show toast notification
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.style.opacity = '1';
+      setTimeout(() => { toast.style.opacity = '0'; }, 3000);
+    }
+
+    // 🔍 Search toggle
+    window.toggleSearch = function() {
+      const input = document.getElementById("searchInput");
+      input.style.display = input.style.display === "none" || !input.style.display ? "inline-block" : "none";
+    }
+
+    // Chips → input me text set karna
+    window.setSearch = function(text) {
+      const input = document.getElementById("searchInput");
+      input.style.display = "inline-block";
+      input.value = text;
+      filterVideos(text.toLowerCase());
+    }
+
+    // Filter videos
+    function filterVideos(query) {
+      const cards = document.querySelectorAll(".video-card");
+      cards.forEach(card => {
+        const title = card.querySelector(".map-code").innerText.toLowerCase();
+        card.style.display = title.includes(query) ? "block" : "none";
+      });
+    }
+
+    // Search typing
+    document.getElementById("searchInput").addEventListener("input", e => {
+      filterVideos(e.target.value.toLowerCase());
+    });
+
+    // ✅ Copy to clipboard
+    window.copyCode = function(code) {
+      navigator.clipboard.writeText(code).then(() => {
+        showToast("Map code copied: ");
+      }).catch(err => {
+        showToast("❌ Failed to copy");
+        console.error('Could not copy text: ', err);
+      });
+    }
+
+    // Handle video click with cooldown
+    function handleVideoClick(thumb, videoContainer, iframe) {
+      if (clickCooldown) return;
+      
+      clickCooldown = true;
+      setTimeout(() => { clickCooldown = false; }, 500);
+      
+      // If this is the same video that was just clicked, toggle sound
+      if (lastClickedVideo === videoContainer) {
+        toggleAllVideosSound();
+      } else {
+        // Otherwise, play the new video
+        playVideo(thumb, videoContainer, iframe);
+        lastClickedVideo = videoContainer;
+      }
+    }
+
+    // Play video function
+    function playVideo(thumb, videoContainer, iframe) {
+      thumb.style.display = "none";
+      videoContainer.style.display = "block";
+      
+      // If there's an active video, pause it
+      if (activeVideo && activeVideo !== videoContainer) {
+        const prevIframe = activeVideo.querySelector('iframe');
+        if (prevIframe && prevIframe.contentWindow) {
+          const data = { method: 'pause' };
+          prevIframe.contentWindow.postMessage(JSON.stringify(data), '*');
+        }
+      }
+      
+      activeVideo = videoContainer;
+      setTimeout(() => setupCustomControls(iframe, videoContainer), 1000);
+    }
+
+    // Custom video controls
+    function setupCustomControls(iframe, container) {
+      const controls = document.createElement('div');
+      controls.className = 'custom-controls';
+      controls.innerHTML = `
+        <button class="control-btn play-pause">◼️</button>
+        <div class="progress-bar"><div class="progress"></div></div>
+        <div class="volume-control">
+          <button class="control-btn volume-btn">🔇</button>
+          <input type="range" class="volume-slider" min="0" max="1" step="0.1" value="1">
+        </div>
+        <button class="control-btn fullscreen-btn">⛶</button>
+      `;
+      
+      container.appendChild(controls);
+
+      if (iframe.src.includes('vimeo.com') && !iframe.src.includes('controls=0')) {
+        iframe.src += (iframe.src.includes('?') ? '&' : '?') + 'controls=0';
+      }
+
+      const playPauseBtn = controls.querySelector('.play-pause');
+      const progressBar = controls.querySelector('.progress');
+      const progressContainer = controls.querySelector('.progress-bar');
+      const volumeBtn = controls.querySelector('.volume-btn');
+      const volumeSlider = controls.querySelector('.volume-slider');
+      const fullscreenBtn = controls.querySelector('.fullscreen-btn');
+
+      function postMessageToPlayer(command, value) {
+        if (iframe.contentWindow) {
+          const data = { method: command };
+          if (value !== undefined) data.value = value;
+          iframe.contentWindow.postMessage(JSON.stringify(data), '*');
+        }
+      }
+
+      window.addEventListener('message', function(event) {
+        try {
+          const data = JSON.parse(event.data);
+          if (data.event === 'play') playPauseBtn.textContent = '◼️';
+          else if (data.event === 'pause') playPauseBtn.textContent = '▶';
+          else if (data.event === 'timeupdate') {
+            if (data.data && data.data.duration && data.data.seconds) {
+              const percent = (data.data.seconds / data.data.duration) * 100;
+              progressBar.style.width = percent + '%';
+            }
+          }
+        } catch (e) {}
+      });
+
+      playPauseBtn.addEventListener('click', () => {
+        if (playPauseBtn.textContent === '▶') {
+          postMessageToPlayer('play'); 
+          playPauseBtn.textContent = '◼️';
+        } else {
+          postMessageToPlayer('pause'); 
+          playPauseBtn.textContent = '▶';
+        }
+      });
+
+      progressContainer.addEventListener('click', e => {
+        const rect = progressContainer.getBoundingClientRect();
+        const percent = (e.clientX - rect.left) / rect.width;
+        postMessageToPlayer('seekTo', percent * 100);
+      });
+
+      volumeSlider.addEventListener('input', function() {
+        postMessageToPlayer('setVolume', this.value);
+        volumeBtn.textContent = this.value == 0 ? '🔇' : '🔊';
+      });
+
+      volumeBtn.addEventListener('click', function() {
+        if (volumeSlider.value > 0) { 
+          volumeSlider.value = 0; 
+          volumeBtn.textContent = '🔇'; 
+        } else { 
+          volumeSlider.value = 1; 
+          volumeBtn.textContent = '🔊'; 
+        }
+        postMessageToPlayer('setVolume', volumeSlider.value);
+      });
+
+      // Enhanced fullscreen functionality
+      fullscreenBtn.addEventListener('click', () => {
+        if (!document.fullscreenElement) {
+          // Enter fullscreen
+          if (container.requestFullscreen) {
+            container.requestFullscreen();
+          } else if (container.webkitRequestFullscreen) {
+            container.webkitRequestFullscreen();
+          } else if (container.msRequestFullscreen) {
+            container.msRequestFullscreen();
+          }
+          
+          // Add orientation lock for mobile
+          if (screen.orientation && screen.orientation.lock) {
+            screen.orientation.lock('landscape').catch(() => {
+              // Orientation lock not supported or failed
+              console.log('Orientation lock not supported');
+            });
+          }
+        } else {
+          // Exit fullscreen
+          if (document.exitFullscreen) {
+            document.exitFullscreen();
+          } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+          } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+          }
+          
+          // Unlock orientation
+          if (screen.orientation && screen.orientation.unlock) {
+            screen.orientation.unlock();
+          }
+        }
+      });
+
+      // Handle fullscreen change events
+      document.addEventListener('fullscreenchange', handleFullscreenChange);
+      document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+      document.addEventListener('msfullscreenchange', handleFullscreenChange);
+      
+      function handleFullscreenChange() {
+        if (document.fullscreenElement === container) {
+          // In fullscreen mode
+          container.style.width = '100vw';
+          container.style.height = '100vh';
+          container.style.borderRadius = '0';
+          
+          // Force landscape orientation on mobile
+          if (window.innerHeight > window.innerWidth) {
+            // This is a portrait device, suggest rotating
+            showToast("Rotate your device for better viewing");
+          }
+        } else {
+          // Exited fullscreen
+          container.style.width = '';
+          container.style.height = '';
+          container.style.borderRadius = '';
+        }
+      }
+    }
+
+    // ✅ Firebase se videos fetch
+    const videoRef = ref(db, "videos");
+    onValue(videoRef, snapshot => {
+      const list = document.getElementById("videoList");
+      list.innerHTML = "";
+      if (!snapshot.exists()) {
+        list.innerHTML = '<div class="loading">No videos found</div>';
+        return;
+      }
+      snapshot.forEach(child => {
+        const data = child.val();
+        let embedUrl = data.videoUrl;
+        if (embedUrl.includes("vimeo.com") && !embedUrl.includes("player.vimeo.com")) {
+          const videoId = embedUrl.split("/").pop();
+          embedUrl = `https://player.vimeo.com/video/${videoId}?autoplay=1&muted=1`;
+        }
+        const card = document.createElement("div");
+        card.className = "video-card";
+        card.innerHTML = `
+          <div class="thumb" style="background-image:url('${data.thumbUrl}')">
+            <div class="play-btn">▶</div>
+          </div>
+          <div>MapCode  ⬇️</div>
+           <button class="copy-btn" onclick="copyCode('${data.mapCode}')">Copy</button>
+          <div class="info">
+            <span class="map-code">${data.mapCode}</span>
+          </div>
+          <div class="video-container">
+            <iframe src="${embedUrl}" allow="autoplay; fullscreen"></iframe>
+          </div>
+        `;
+        const thumb = card.querySelector(".thumb");
+        const videoContainer = card.querySelector(".video-container");
+        const iframe = card.querySelector("iframe");
+        
+        thumb.onclick = () => handleVideoClick(thumb, videoContainer, iframe);
+        list.appendChild(card);
+      });
+    }, err => {
+      document.getElementById("videoList").innerHTML = '<div class="loading">Error loading videos</div>';
+      console.error(err);
+    });
+
+    // Add scroll event listener with throttling
+    let isScrolling;
+    window.addEventListener('scroll', function() {
+      window.clearTimeout(isScrolling);
+      isScrolling = setTimeout(function() {
+        handleScroll();
+      }, 100);
+    }, false);
+  </script>
+</body>
+</html>

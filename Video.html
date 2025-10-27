@@ -290,7 +290,7 @@
   <!-- Search Section -->
   <div class="search-container">
     <button id="searchBtn" onclick="toggleSearch()">🔍 </button>
-    <input type="text" id="searchInput" placeholder="Search videos...">
+    <input type="text" id="searchInput" placeholder="Search "videos"...">
     <div class="chips">
       <span class="chip" onclick="setSearch('script')">Script</span>
       <span class="chip" onclick="setSearch('Map')">Map</span>
@@ -332,33 +332,9 @@
 
     // Global variables for scroll control
     let isSoundOn = true;
-    let scrollCount = 0;
-    let lastScrollTime = 0;
-    const SCROLL_COOLDOWN = 1000; // 1 second cooldown between scroll actions
     let activeVideo = null;
     let lastClickedVideo = null;
     let clickCooldown = false;
-
-    // Improved scroll event handler
-    function handleScroll() {
-      const currentTime = Date.now();
-      
-      // Check if enough time has passed since last scroll action
-      if (currentTime - lastScrollTime < SCROLL_COOLDOWN) {
-        return;
-      }
-      
-      scrollCount++;
-      
-      // Toggle sound on every second scroll
-      if (scrollCount % 2 === 0) {
-        toggleAllVideosSound();
-        lastScrollTime = currentTime;
-      }
-      
-      // Check which video is in view and control it
-      controlVideoInView();
-    }
 
     // Control video that's currently in view
     function controlVideoInView() {
@@ -732,7 +708,7 @@
     window.addEventListener('scroll', function() {
       window.clearTimeout(isScrolling);
       isScrolling = setTimeout(function() {
-        handleScroll();
+        controlVideoInView();
       }, 100);
     }, false);
   </script>

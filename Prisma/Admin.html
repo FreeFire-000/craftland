@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Upload</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; background:#eef2f7;}
+    h2 { text-align:center; }
+    .form { background:white; padding:20px; border-radius:12px; max-width:400px; margin:auto; box-shadow:0 4px 12px rgba(0,0,0,0.2);}
+    input, button { width:100%; padding:10px; margin:8px 0; border-radius:8px; border:1px solid #ccc; font-size:14px; }
+    button { background:#2196f3; color:white; border:none; cursor:pointer; font-size:15px; }
+    button:hover { background:#1976d2; }
+  </style>
+</head>
+<body>
+
+  <h2>Admin Video Upload</h2>
+  <div class="form">
+    <input type="text" id="videoUrl" placeholder="Enter Vimeo Video URL (e.g. https://vimeo.com/1118603816)">
+    <input type="file" id="thumbFile" accept="image/*">
+    <input type="text" id="mapCode" placeholder="Enter Map Code">
+    <button onclick="uploadVideo()">Upload</button>
+  </div>
+
+  <!-- Firebase v9 SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+    // 🔑 Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyBe4FGAYsgFq5UXL-nqiomOHA6X3Jh7IKg",
+      authDomain: "happy-c4a22.firebaseapp.com",
+      databaseURL: "https://happy-c4a22-default-rtdb.firebaseio.com",
+      projectId: "happy-c4a22",
+      storageBucket: "happy-c4a22.firebasestorage.app",
+      messagingSenderId: "307926114887",
+      appId: "1:307926114887:web:c0b43266d4158329d5c762",
+      measurementId: "G-F7D1YDPJ0F"
+    };
+
+    // ✅ Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // 🔄 Vimeo URL ko embed URL me convert karne ka function
+    function convertVimeoUrl(url) {
+      if (url.includes("vimeo.com") && !url.includes("player.vimeo.com")) {
+        const videoId = url.split("/").pop();
+        return `https://player.vimeo.com/video/${videoId}?autoplay=1&muted=1&controls=0`;
+      }
+      return url;
+    }
+
+    // ✅ Upload function
+    window.uploadVideo = async function() {
+      const rawUrl = document.getElementById("videoUrl").value.trim();
+      const mapCode = document.getElementById("mapCode").value.trim();
+      const file = document.getElementById("thumbFile").files[0];
+
+      if (!rawUrl || !file || !mapCode) {
+        alert("⚠️ Please fill all fields and select an image");
+        return;
+      }
+
+      // Vimeo link ko embed me convert karo
+      const videoUrl = convertVimeoUrl(rawUrl);
+
+      try {
+        // 🔄 Upload to imgbb
+        const formData = new FormData();
+        formData.append("image", file);
+
+        const imgbbApiKey = "412ddec7f786e97147d5d55661cf57a3"; // apna imgbb API key yaha dalna
+        const res = await fetch(`https://api.imgbb.com/1/upload?key=${imgbbApiKey}`, {
+          method: "POST",
+          body: formData
+        });
+
+        const data = await res.json();
+        if (!data.success) {
+          throw new Error("Image upload failed");
+        }
+
+        const thumbUrl = data.data.url; // ✅ HTML display link
+
+        // 🔥 Save to Firebase
+        await push(ref(db, "videos"), { videoUrl, thumbUrl, mapCode });
+
+        alert("✅ Video Uploaded Successfully!");
+        document.getElementById("videoUrl").value = "";
+        document.getElementById("thumbFile").value = "";
+        document.getElementById("mapCode").value = "";
+
+      } catch (error) {
+        alert("❌ Error: " + error.message);
+      }
+    }
+  </script>
+
+</body>
+</html>

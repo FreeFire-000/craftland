@@ -1,125 +1,181 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EZmob Ads Demo</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EZmob Ads Demo</title>
 
-<!-- EZmob Video -->
-<script src="https://docdn.ezmob.com/prebid.js" async></script>
+  <!-- EZmob Prebid -->
+  <script src="https://docdn.ezmob.com/prebid.js" async></script>
 
-<!-- Popup / Display -->
-<script>
-window.adk_pdisp = {
-    h: "xml.qualiclicks.com",
-    f: 1309847,
-    a: "goDs",
-    ps: [1,5],
-    cin: 4,
-    s: "",
-    q: [],
-    t: 24
-};
-</script>
-<script src="//static.qualiclicks.com/tabu/display.js"></script>
-
+  <!-- Popup / Display Ad -->
+  <script>
+    window.adk_pdisp = {
+      h: "xml.qualiclicks.com",
+      f: 1309847,
+      a: "goDs",
+      ps: [1,5],
+      cin: 4,
+      s: "",
+      q: [],
+      t: 24
+    };
+  </script>
+  <script src="https://static.qualiclicks.com/tabu/display.js"></script>
 </head>
 <body>
 
-<h2>My Website</h2>
+  <h2>EZmob Ads Demo</h2>
 
-<!-- Banner Ad -->
-<h3>Banner Ad</h3>
-<div style="width:300px;height:250px;">
-<script>
-var __jscp=function(){
-    for(var b=0,a=window;a!=a.parent;)++b,a=a.parent;
-    if(a=window.parent==window?document.URL:document.referrer){
-        var c=a.indexOf("://");
-        if(c>=0)a=a.substring(c+3);
-        c=a.indexOf("/");
-        if(c>=0)a=a.substring(0,c);
-    }
-    var obj={
-        pu:a,
-        "if":b,
-        rn:Math.floor(99999999*Math.random())+1
-    };
-    var arr=[];
-    for(var k in obj){
-        arr.push(k+"="+encodeURIComponent(obj[k]));
-    }
+  <!-- ================= Banner Ad ================= -->
 
-    document.write('<script src="https://cpm.ezmob.com/tag?zone_id=385133&size=300x250&subid=&j='+
-    encodeURIComponent(arr.join("&"))+
-    '"><\/script>');
-};
-__jscp();
-</script>
-</div>
+  <h3>Banner Ad</h3>
 
-<hr>
+  <div style="width:300px;height:250px;">
+    <script>
+      var __jscp=function(){
+        for(var b=0,a=window;a!=a.parent;)++b,a=a.parent;
 
-<h3>Video Ad</h3>
+        if(a=window.parent==window?document.URL:document.referrer){
+          var c=a.indexOf("://");
+          if(c>=0)a=a.substring(c+3);
+          c=a.indexOf("/");
+          if(c>=0)a=a.substring(0,c);
+        }
 
-<button onclick="showVideoAd()">Show Video Ad</button>
+        var obj={
+          pu:a,
+          "if":b,
+          rn:Math.floor(Math.random()*99999999)+1
+        };
 
-<div id="container-1"></div>
+        var arr=[];
 
-<script>
-var pbjs = pbjs || {};
-pbjs.que = pbjs.que || [];
+        for(var k in obj){
+          arr.push(k+"="+encodeURIComponent(obj[k]));
+        }
 
-function showVideoAd(){
+        document.write(
+          '<script src="https://cpm.ezmob.com/tag?zone_id=385133&size=300x250&subid=&j='+
+          encodeURIComponent(arr.join("&"))+
+          '"><\/script>'
+        );
+      };
+      __jscp();
+    </script>
+  </div>
 
-    pbjs.que.push(function(){
+  <hr>
+
+  <!-- ================= Video Ad ================= -->
+
+  <h3>Video Ad</h3>
+
+  <button onclick="showVideoAd()">Watch Video Ad</button>
+
+  <div id="container-1"></div>
+
+  <script>
+    var pbjs = pbjs || {};
+    pbjs.que = pbjs.que || [];
+
+    function showVideoAd(){
+
+      pbjs.que.push(function(){
 
         var adUnits=[{
-            code:"container-1",
-            mediaTypes:{
-                video:{
-                    context:"outstream",
-                    playerSize:[300,250],
-                    renderer:{
-                        url:"https://docdn.ezmob.com/outstream_pb.js",
-                        render:renderOutstream
-                    }
-                }
-            },
-            bids:[{
-                bidder:"adkernel",
-                params:{
-                    zoneId:385132,
-                    host:"cpm.ezmob.com"
-                }
-            }]
+          code:"container-1",
+          mediaTypes:{
+            video:{
+              context:"outstream",
+              playerSize:[300,250],
+              renderer:{
+                url:"https://docdn.ezmob.com/outstream_pb.js",
+                render:renderOutstream
+              }
+            }
+          },
+          bids:[{
+            bidder:"adkernel",
+            params:{
+              zoneId:385182,
+              host:"cpm.ezmob.com"
+            }
+          }]
         }];
 
         pbjs.addAdUnits(adUnits);
 
         pbjs.requestBids({
-            bidsBackHandler:function(){
-                var bids=pbjs.getHighestCpmBids("container-1");
-                if(bids.length){
-                    pbjs.renderAd(document,bids[0].adId);
-                }else{
-                    alert("No Video Ad Available");
-                }
-            }
+          bidsBackHandler:function(){
+            process("container-1");
+          }
         });
 
-    });
+      });
 
-}
+    }
 
-function renderOutstream(bid){
-    OutstreamPlayerPB(bid,{
+    function process(adUnit){
+
+      var bidResponses=pbjs.getHighestCpmBids(adUnit);
+
+      if(bidResponses.length===0){
+        alert("No Video Ad Available");
+        return;
+      }
+
+      pbjs.renderAd(document,bidResponses[0].adId);
+
+    }
+
+    function renderOutstream(bid){
+
+      OutstreamPlayerPB(bid,{
         displayMode:"floating",
         transitions:true,
         vpaidMode:2
-    });
-}
-</script>
+      });
+
+    }
+  </script>
+
+  <hr>
+
+  <!-- ================= In-Page Push Ad (added below) ================= -->
+
+  <h3>In-Page Push Ad</h3>
+  <div style="margin: 20px 0; padding: 10px; border: 1px solid #eee; background: #fafafa; min-height: 60px;">
+    <!-- In-Page Push Ad script -->
+    <script>
+      (function(i,n,p,a,g,e){
+        i.inpagepush = i.inpagepush || function() {
+          (i.inpagepush.q = (i.inpagepush.q || [])).push(arguments);
+        };
+
+        var s = n.getElementsByTagName('head')[0];
+        var q = n.createElement('script');
+        q.async = 1;
+        q.src = "https://static.qualiclicks.com/inpage/inpage.js";
+        s.appendChild(q);
+
+        i.inpagepush('init', {
+          host: 'xml.qualiclicks.com',
+          feed: 1310002,
+          auth: 'gjGl',
+          subid: '',
+          refresh: 19,
+          position: 'top',
+          slots: 2,
+          query: '',
+          nodesrc: true
+        });
+
+        i.inpagepush('show');
+
+      })(window, document);
+    </script>
+  </div>
 
 </body>
 </html>
